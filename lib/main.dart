@@ -1,44 +1,68 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'dart:io';
-import 'package:sbhconst/firebase_options.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'Components/utils.dart';
+import 'Login/verifyemail.dart';
+import 'Startup Screens/1.dart';
+import 'firebase_options.dart';
 
-
-
-
+final navigatorKey = GlobalKey<NavigatorState>();
 void main() async{
-
   WidgetsFlutterBinding.ensureInitialized();
-
-
-  await Firebase.initializeApp();
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  NotificationSettings settings = await messaging.requestPermission();
-  print('User granted permission: ${settings.authorizationStatus}');
-
-  // Configure how the app handles messages when it's in the foreground
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('Received foreground message: ${message.notification?.body}');
-  });
-
-  // Configure how the app handles messages when it's in the background or terminated
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: FirebaseAuth.instance.currentUser != null ? '/' : '/login',
-      routes: {
-        '/': (context) => Admin_Schedule(),
-        '/login': (context) => const Login(),
-      }));
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  //After initialization, building material app
+  runApp(
+    MyApp(),
+  );
 }
 
-// Background message handler
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Received background message: ${message.notification?.body}');
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      scaffoldMessengerKey: Utils.messengerKey,
+      navigatorKey: navigatorKey,
+        debugShowCheckedModeBanner: false,
+      home: const SecurityTree(),
+
+    );
+  }
 }
 
+class SecurityTree extends StatefulWidget {
+  const SecurityTree({super.key});
+
+  @override
+  State<SecurityTree> createState() => _SecurityTreeState();
+}
+
+class _SecurityTreeState extends State<SecurityTree> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (ConnectionState == snapshot.connectionState) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return const Center(
+                child: Text("Something Went Wrong!!"),
+              );
+            } else if (snapshot.hasData && FirebaseAuth.instance.currentUser!.isAnonymous == false) {
+              return const VerifyEmailPage();
+            } else {
+              return const InitialSetup();
+            }
+          }),
+    );
+  }
+}
 

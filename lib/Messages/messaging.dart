@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import '../Components/NavBar.dart';
 import '../Components/avatar.dart';
@@ -9,7 +10,7 @@ import '../Components/helpers.dart';
 import '../Components/message_data.dart';
 import '../Components/theme.dart';
 import 'messageBackend.dart';
-
+import 'dart:core';
 
 class Messaging extends StatefulWidget {
   //helper function
@@ -92,20 +93,41 @@ class _MessagingState extends State<Messaging> {
   }
 }
 
-class _AppBarTitle extends StatelessWidget {
-  const _AppBarTitle({
+class _AppBarTitle extends StatefulWidget {
+  _AppBarTitle({
     Key? key,
     required this.messageData,
   }) : super(key: key);
-
   final MessageData messageData;
 
   @override
+  State<_AppBarTitle> createState() => _AppBarTitleState();
+}
+
+class _AppBarTitleState extends State<_AppBarTitle> {
+  final messageDB msgdb = messageDB();
+  String state = "";
+  @override
+  void initState(){
+    super.initState();
+    call();
+
+  }
+
+  void call() async{
+    String userState = await msgdb.userState(widget.messageData.senderName);
+    setState(() {
+        state=userState;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print(state);
     return Row(
       children: [
         Avatar.small(
-          url: messageData.profilePicture,
+          url: widget.messageData.profilePicture,
         ),
         const SizedBox(
           width: 16,
@@ -116,13 +138,13 @@ class _AppBarTitle extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                messageData.senderName,
+                widget.messageData.senderName,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontSize: 16,color: Colors.white),
               ),
               const SizedBox(height: 2),
-              const Text(
-                'Online now',
+              Text(
+               state,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
@@ -215,9 +237,12 @@ class _MessagingBarState extends State<_MessagingBar> {
                   padding: const EdgeInsets.only(left:12, right:24),
                   child: IconButton(
                     icon: const Icon(Icons.send,color: Colors.white),
-                    onPressed: () {
-                      msgdb.sendMessage('gF4LOJIn1oXAsNRTVpXsivSmf9j1', widget.messageData.senderName, message);
-                      msgdb.receiveMessage(widget.messageData.senderName,'Garvit', message);
+                    onPressed: () async{
+                      DateTime now = DateTime.now();
+                      String time = DateFormat('HH:mm a').format(now);
+
+                      await msgdb.sendMessage(FirebaseAuth.instance.currentUser?.uid, widget.messageData.senderName, message, time);
+                      await msgdb.receiveMessage(widget.messageData.senderName, 'Yash', message, time);
                       Navigator.push(
                           context,
                           PageTransition(
@@ -247,42 +272,41 @@ class _MessageList extends StatefulWidget {
 
 class _MessageListState extends State<_MessageList> {
 
-  @override
-  void initState(){
-    super.initState();
-    initData();
+  late Future<void> _initDataFuture;
 
+  @override
+  void initState() {
+    super.initState();
+    _initDataFuture = initData();
   }
 
   Future<void> initData() async {
     await dateMessages();
-    await sentMessages();
-    await receivedMessages();
+    await messages();
     await boolMessages();
-    merge();
-
+    await timestampMessages();
   }
 
   final messageDB msgdb = messageDB();
 
   List dates = [];
-  List sent = [];
-  List received = [];
+  List messagesList = [];
   List boolean = [];
-  List combine = [];
+  List timestamp = [];
 
   Future dateMessages() async{
     dates = await msgdb.messagesDateListReturn(FirebaseAuth.instance.currentUser?.uid, widget.messageData.senderName);
   }
 
-  Future sentMessages() async {
+  Future messages() async {
 
     for (int i = 0; i < dates.length; i++) {
+      messagesList.add(dates[i]);
       List msent = await msgdb.messagesListReturn(
           FirebaseAuth.instance.currentUser?.uid, widget.messageData.senderName,
-          dates[i], 'messagesSent');
+          dates[i], 'messagesList');
       for(int j=0;j < msent.length;j++){
-        sent.add(msent[j]);
+        messagesList.add(msent[j]);
       }
     }
   }
@@ -298,41 +322,76 @@ class _MessageListState extends State<_MessageList> {
     }
   }
 
-  Future receivedMessages() async {
+  Future timestampMessages() async {
     for (int i = 0; i < dates.length; i++) {
-      List mr = await msgdb.messagesListReturn(
+      List mt = await msgdb.messagesListReturn(
           FirebaseAuth.instance.currentUser?.uid, widget.messageData.senderName,
-          dates[i],'messagesReceived');
-      for(int j=0;j < mr.length;j++){
-        received.add(mr[j]);
+          dates[i],'messagesTimestamp');
+      for(int j=0;j < mt.length;j++){
+        timestamp.add(mt[j]);
       }
     }
   }
 
-  void merge(){
+  bool isDateInFormat(String date) {
+    // Define the regex pattern for the date format "day.month.year"
+    RegExp regExp = RegExp(r'^\d{1,2}\.\d{1,2}\.\d{4}$');
 
-    for(int i=0;i< boolean.length; i++){
-      if(boolean[i] == false) combine.add(received[i]);
-      else combine.add(sent[i]);
-    }
-    print(sent);
+    return regExp.hasMatch(date);
+  }
+
+  Widget buildWidget(int index) {
+    DateTime now = DateTime.now();
+    String date = DateFormat('dd.MM.yyyy').format(now);
+    DateTime previousDay = now.subtract(Duration(days: 1));
+    String previousDate = DateFormat('dd.MM.yyyy').format(previousDay);
+
+    if(date==messagesList[index])
+      return _DateLabel(label: "Today");
+    else if(previousDate==messagesList[index])
+      return _DateLabel(label: "Yesterday");
+    return _DateLabel(label: messagesList[index]);
   }
 
   @override
   Widget build(BuildContext context) {
-
+    print("m:");
+    print(messagesList);
+    int msgIndex = 0;
     return Scaffold(
       backgroundColor: HexColor("#1b2a61"),
-      body: ListView.builder(
-        itemCount: boolean.length,
-        itemBuilder: (context, index) {
-          if(boolean[index] == true){
-            return _MessageSelfTile(message: combine[index], messageDate: "dates[index]");
+      body: FutureBuilder<void>(
+        future: _initDataFuture,
+        builder: (context, snapshot) {
+            return ListView.builder(
+              itemCount: boolean.length,
+              itemBuilder: (context, index) {
+                if (isDateInFormat(messagesList[msgIndex])) {
+                  Widget dateLabelWidget = buildWidget(msgIndex++);
+                  if (boolean[index]) {
+                    return Column(
+                      children: [
+                        dateLabelWidget,
+                        _MessageSelfTile(message: messagesList[msgIndex++], messageDate: timestamp[index]),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      children: [
+                        dateLabelWidget,
+                        _MessageTile(message: messagesList[msgIndex++], messageDate: timestamp[index], messageData: widget.messageData),
+                      ],
+                    );
+                  }
+                }
+                else if (boolean[index]) {
+                  return _MessageSelfTile(message: messagesList[msgIndex++], messageDate: timestamp[index]);
+                } else {
+                  return _MessageTile(message: messagesList[msgIndex++], messageDate: timestamp[index], messageData: widget.messageData);
+                }
+              },
+            );
           }
-          else{
-            return _MessageTile(message: combine[index],messageDate: "dates[index]",messageData: widget.messageData);
-          }
-        },
       ),
     );
   }
@@ -382,7 +441,7 @@ class _MessageSelfTile extends StatelessWidget {
                     Text(
                       messageDate,
                       style: TextStyle(
-                        color: Color(0xFF585959),
+                        color: Colors.white70,
                         fontSize: 12,
                       ),
                     ),

@@ -18,41 +18,65 @@ class Messages extends StatefulWidget {
 }
 
 class _MessagesState extends State<Messages> {
+  final messageDB msgdb = messageDB();
+
+  //Lists
+  List messengers = [];
+  List latestMessages = [];
+  List latestMessagesTimestamp = [];
+
+  @override
+  void initState() {
+    super.initState();
+    call();
+  }
+
+  void call() async {
+    List m = await msgdb.sendChattingUsers(FirebaseAuth.instance.currentUser?.uid);
+    List m1 = await msgdb.sendLatestMessageList(FirebaseAuth.instance.currentUser?.uid);
+    List m2 = await msgdb.sendLatestMessageTimestampList(FirebaseAuth.instance.currentUser?.uid);
+    setState(() {
+      messengers = m;
+      latestMessages = m1;
+      latestMessagesTimestamp = m2;
+    });
+    print(messengers);
+  }
+
+  Widget _delegate(BuildContext context, int index) {
+    print("messengers $latestMessages");
+    final currentDate = DateTime.now();
+    return _MessageTitle(messageData: MessageData(
+      senderName: messengers[index],
+      message: latestMessages.isEmpty ? " " : latestMessages[index],
+      messageDate: currentDate,
+      dateMessage: latestMessagesTimestamp.isEmpty ? " " : latestMessagesTimestamp[index],
+      profilePicture: Helpers.randomPictureUrl(),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      backgroundColor: HexColor("#1b2a61"),
-      drawer: NavBar(),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-      ),
-      body: const CustomScrollView(
-            slivers:[
+    return Scaffold(
+        backgroundColor: HexColor("#1b2a61"),
+        drawer: NavBar(),
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+        ),
+        body: CustomScrollView(
+            slivers: [
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                     _delegate,
-                  childCount: 1
+                    childCount: messengers.length
                 ),
               )
             ]
         )
     );
   }
+
 }
-
-  Widget _delegate(BuildContext context, int index){
-    final currentDate = DateTime.now();
-    print(index);
-    return _MessageTitle(messageData: MessageData(
-      senderName: 'Jagrit Parakh',
-      message: 'Hello, how are you?',
-      messageDate: currentDate,
-      dateMessage: Jiffy.parseFromDateTime(currentDate).fromNow(),
-      profilePicture: Helpers.randomPictureUrl(),
-    ));
-  }
-
 
 class _MessageTitle extends StatelessWidget {
 
@@ -68,8 +92,8 @@ class _MessageTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-        // msgdb.addReceptor(messageData.senderName, 'gF4LOJIn1oXAsNRTVpXsivSmf9j1');
+      onTap: () async{
+        msgdb.addReceptor(messageData.senderName, FirebaseAuth.instance.currentUser?.uid);
         Navigator.of(context).push(Messaging.route(messageData));
       },
       child: Container(

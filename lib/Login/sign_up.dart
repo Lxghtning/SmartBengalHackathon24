@@ -1,11 +1,13 @@
-// ignore_for_file: non_constant_identifier_names
 
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sbhconst/Login/LoginWidget.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sbhconst/Messages/messageBackend.dart';
 import 'package:sbhconst/main.dart';
 import 'package:sbhconst/Components/database.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -26,6 +28,9 @@ class SignUpWidget extends StatefulWidget {
 }
 
 class _SignUpWidgetState extends State<SignUpWidget> {
+  //message database
+  final messageDB msgdb = new messageDB();
+
   //controllers to store form data
   final emailController = TextEditingController();
   final PhoneController = TextEditingController();
@@ -286,6 +291,12 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               );
       FirebaseAuth.instance.currentUser!
           .updateDisplayName(nameController.text.trim());
+
+      Timestamp time = Timestamp.now();
+      await msgdb.addUser(nameController.text.trim(),
+          FirebaseAuth.instance.currentUser?.email,
+          FirebaseAuth.instance.currentUser?.uid,
+          "Online");
 
     } on FirebaseAuthException catch (e) {
       //exception handling

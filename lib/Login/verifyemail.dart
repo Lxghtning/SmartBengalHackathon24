@@ -10,7 +10,7 @@ import 'package:sbh24/Home/home.dart';
 
 //deals with statuis of email verification
 class VerifyEmailPage extends StatefulWidget {
-  const VerifyEmailPage({Key? key}) : super(key: key);
+  const VerifyEmailPage({super.key});
 
   @override
   State<VerifyEmailPage> createState() => _VerifyEmailPageState();

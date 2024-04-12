@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sbh24/Startup Screens/Grid.dart';
 import 'package:sbh24/Login/VerifyEmail.dart';
 
 class DummySignUp extends StatelessWidget {
-
-
+  const DummySignUp({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -3,12 +3,9 @@ import 'package:email_validator/email_validator.dart';
 import 'package:sbh24/Components/Navigators.dart';
 import 'package:sbh24/Login/SignIn.dart';
 import 'package:sbh24/Login/dummySignUP.dart';
-import 'package:sbh24/Startup%20Screens/Grid.dart';
 import '/Firebase/Auth_Services.dart';
 import '/help_func.dart';
 import '/Firebase/Database_Services.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sbh24/Startup Screens/Grid.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -45,7 +42,7 @@ class _SignUpState extends State<SignUp> {
     return MaterialApp(
 
         home: Scaffold(
-          backgroundColor: Color(0xff1B264F),
+          backgroundColor: const Color(0xff1B264F),
 
 
 
@@ -55,21 +52,21 @@ class _SignUpState extends State<SignUp> {
             child: Container(
               child: Column(
                 children: [
-                  Image(image: AssetImage('assets/const_logo.png'), height: 100.0, width: 100.0,),
-          
-          
-          
-                  Text('Sign Up', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
-                  SizedBox(height: 35.0),
+                  const Image(image: AssetImage('assets/const_logo.png'), height: 100.0, width: 100.0,),
+
+
+
+                  const Text('Sign Up', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
+                  const SizedBox(height: 35.0),
           
                   //Display Name
           
                   TextField(
                       controller: _displayNameController,
                       keyboardType: TextInputType.text,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                       cursorColor: Colors.white,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
           
@@ -86,19 +83,19 @@ class _SignUpState extends State<SignUp> {
                           displayName = value;
                         });
                       },),
-          
-          
-          
-                  SizedBox(height: 20.0),
+
+
+
+                  const SizedBox(height: 20.0),
           
                   //Email
           
                   TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     cursorColor: Colors.white,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
                       ),
@@ -128,29 +125,29 @@ class _SignUpState extends State<SignUp> {
                   }
                   }
                   ),
-          
-                SizedBox(height: 20.0),
+
+                  const SizedBox(height: 20.0),
                   TextField(
                     controller: _passwordController,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     cursorColor: Colors.white,
                     obscureText: passview_off == true ? true : false,
                     decoration: InputDecoration(
                       focusColor: Colors.white,
-                      focusedBorder: OutlineInputBorder(
+                      focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
           
                       ),
           
-                      enabledBorder: OutlineInputBorder(
+                      enabledBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
           
                       ),
-                      labelText: 'Enter your password',labelStyle: TextStyle(color: Colors.white),
-                      prefixIcon: Icon(Icons.lock,color: Colors.white,),
-                      suffixIcon: passview_off ? IconButton(icon: Icon(Icons.visibility,color: Colors.white,), onPressed: () {setState(() {
+                      labelText: 'Enter your password',labelStyle: const TextStyle(color: Colors.white),
+                      prefixIcon: const Icon(Icons.lock,color: Colors.white,),
+                      suffixIcon: passview_off ? IconButton(icon: const Icon(Icons.visibility,color: Colors.white,), onPressed: () {setState(() {
                         passview_off = false;
-                      });}) : IconButton(icon: Icon(Icons.visibility_off, color: Colors.white,), onPressed: () {setState(() {
+                      });}) : IconButton(icon: const Icon(Icons.visibility_off, color: Colors.white,), onPressed: () {setState(() {
                         passview_off = true;
                       });}),
           
@@ -160,11 +157,11 @@ class _SignUpState extends State<SignUp> {
                         password = value;
                       });
                     },),
-          
-                  SizedBox(height: 20.0),
+
+                  const SizedBox(height: 20.0),
                  DropdownButtonFormField(
           
-                   decoration: InputDecoration(
+                   decoration: const InputDecoration(
                      focusColor: Colors.white,
                      focusedBorder: OutlineInputBorder(
                        borderSide: BorderSide(color: Colors.white),
@@ -181,9 +178,9 @@ class _SignUpState extends State<SignUp> {
                      prefixIconColor: Colors.white,
           
                    ),
-                      icon: Icon(Icons.arrow_drop_down_outlined, color: Colors.white,),
-                      dropdownColor: Color(0xff1B264F),
-                      style: TextStyle(color: Colors.white, fontSize: 17.0),
+                      icon: const Icon(Icons.arrow_drop_down_outlined, color: Colors.white,),
+                      dropdownColor: const Color(0xff1B264F),
+                      style: const TextStyle(color: Colors.white, fontSize: 17.0),
                       value : yearOfGrad,
           
                       items: years!.map((item){
@@ -191,7 +188,7 @@ class _SignUpState extends State<SignUp> {
           
           
                           value: item.toString(),
-                          child: Text(item.toString(), style: TextStyle(color:Colors.white,
+                          child: Text(item.toString(), style: const TextStyle(color:Colors.white,
                           ),
                           )
                         );
@@ -205,13 +202,13 @@ class _SignUpState extends State<SignUp> {
                         });
                       },
                     ),
-          
-          
-          
-                 SizedBox(height: 50.0),
+
+
+
+                  const SizedBox(height: 50.0),
                   Align(
                     alignment: Alignment.center,
-                    child: Text(error, style: TextStyle(color: Colors.red),),
+                    child: Text(error, style: const TextStyle(color: Colors.red),),
                   ),
           
                   ElevatedButton(onPressed: ()async{
@@ -252,7 +249,7 @@ class _SignUpState extends State<SignUp> {
                           //     FirebaseAuth.instance.currentUser?.uid,
                           //     "Online",
                           //     time);
-                          navigation().navigateToPage(context, DummySignUp());
+                          navigation().navigateToPage(context, const DummySignUp());
                       }
                     } catch (e) {
                       setState(() {
@@ -262,20 +259,20 @@ class _SignUpState extends State<SignUp> {
                     }
           
                   },
-                  child: Text('Sign Up', style: TextStyle(fontSize: 15.0),),
+                  child: const Text('Sign Up', style: TextStyle(fontSize: 15.0),),
           
                   ),
-                  SizedBox(height: 10.0),
+                  const SizedBox(height: 10.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
           
                     children: [
-                      Text('Already have an account?', style: TextStyle(color: Colors.white),),
+                      const Text('Already have an account?', style: TextStyle(color: Colors.white),),
                       TextButton(
                         onPressed: () {
-                          navigation().navigateToPage(context, SignIn());
+                          navigation().navigateToPage(context, const SignIn());
                         },
-                        child: Text('Sign In', style: TextStyle(color: Colors.blue),),
+                        child: const Text('Sign In', style: TextStyle(color: Colors.blue),),
                       ),
                     ],
                   )

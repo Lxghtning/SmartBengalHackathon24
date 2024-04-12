@@ -6,6 +6,8 @@ import 'package:sbh24/Components/Navigators.dart';
 import 'package:sbh24/Login/SignUp.dart';
 import 'package:sbh24/Home/home.dart';
 class SignIn extends StatefulWidget {
+  const SignIn({super.key});
+
 
 
   @override
@@ -35,7 +37,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-            backgroundColor: Color(0xff1B264F),
+            backgroundColor: const Color(0xff1B264F),
 
             body: SingleChildScrollView(
               child: Padding(
@@ -43,16 +45,16 @@ class _SignInState extends State<SignIn> {
                 child: Container(
                   child: Column(
                     children: [
-                      Image(image: AssetImage('assets/const_logo.png'), height: 100.0, width: 100.0,),
+                      const Image(image: AssetImage('assets/const_logo.png'), height: 100.0, width: 100.0,),
 
-                      Text('Sign In', style: TextStyle(fontSize: 50.0,fontWeight: FontWeight.w900, color: Colors.white),),
-                      SizedBox(height: 35.0),
+                      const Text('Sign In', style: TextStyle(fontSize: 50.0,fontWeight: FontWeight.w900, color: Colors.white),),
+                      const SizedBox(height: 35.0),
                       TextField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           cursorColor: Colors.white,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
                             ),
@@ -83,29 +85,29 @@ class _SignInState extends State<SignIn> {
 
                       ),//Email
 
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
 
                       TextField(
                         controller: _passwordController,
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                         obscureText: passview_off == true ? true : false,
                         cursorColor: Colors.white,
                         decoration: InputDecoration(
                           focusColor: Colors.white,
-                          focusedBorder: OutlineInputBorder(
+                          focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
 
                           ),
 
-                          enabledBorder: OutlineInputBorder(
+                          enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
 
                           ),
-                          labelText: 'Enter your password', labelStyle: TextStyle(color: Colors.white),
-                          prefixIcon: Icon(Icons.lock, color: Colors.white,),
-                          suffixIcon: passview_off ? IconButton(icon: Icon(Icons.visibility, color: Colors.white,), onPressed: () {setState(() {
+                          labelText: 'Enter your password', labelStyle: const TextStyle(color: Colors.white),
+                          prefixIcon: const Icon(Icons.lock, color: Colors.white,),
+                          suffixIcon: passview_off ? IconButton(icon: const Icon(Icons.visibility, color: Colors.white,), onPressed: () {setState(() {
                             passview_off = false;
-                          });}) : IconButton(icon: Icon(Icons.visibility_off, color: Colors.white,), onPressed: () {setState(() {
+                          });}) : IconButton(icon: const Icon(Icons.visibility_off, color: Colors.white,), onPressed: () {setState(() {
                             passview_off = true;
                           });}),
 
@@ -120,23 +122,23 @@ class _SignInState extends State<SignIn> {
                           alignment: Alignment.centerLeft,
                           child: TextButton(
                           onPressed: (){_showForgotPasswordDialog(context);},
-                            child: Text('Forgot Password', style: TextStyle(color: Colors.white),),
+                            child: const Text('Forgot Password', style: TextStyle(color: Colors.white),),
 
 
 
 
                         ),),
 
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
                       Align(
                         alignment: Alignment.center,
-                        child: Text(error, style: TextStyle(color: Colors.red),),
+                        child: Text(error, style: const TextStyle(color: Colors.red),),
                       ),
-                      SizedBox(height: 5.0),
+                      const SizedBox(height: 5.0),
 
 
                       ElevatedButton(
-                        child: Text('Sign In', style: TextStyle(fontSize: 15.0),),
+                        child: const Text('Sign In', style: TextStyle(fontSize: 15.0),),
 
                         onPressed:()async {
                           bool isEmailExisting = await database_services.isEmailExisting(email);
@@ -153,7 +155,7 @@ class _SignInState extends State<SignIn> {
                             }
                             else {
                               await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-                              nav.navigateToPage(context, Home());
+                              nav.navigateToPage(context, const Home());
                             }
                             }
 
@@ -179,14 +181,14 @@ class _SignInState extends State<SignIn> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center
                         ,children: [
-                        Text('Don\'t have an account?',
+                        const Text('Don\'t have an account?',
                         style: TextStyle(color: Colors.white),)
                         ,
                         TextButton(
                           onPressed: (){
-                            nav.navigateToPage(context, SignUp());
+                            nav.navigateToPage(context, const SignUp());
                           },
-                          child: Text('Sign Up', style: TextStyle(color: Colors.blue),),
+                          child: const Text('Sign Up', style: TextStyle(color: Colors.blue),),
                         )
                     ]
                       )

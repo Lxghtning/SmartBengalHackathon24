@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:sbh24/Home/Home.dart';
+import 'package:sbh24/Login/apiVerify.dart';
 import '/Firebase/Auth_Services.dart';
 import '/help_func.dart';
 import '/Firebase/Database_Services.dart';
@@ -21,10 +22,12 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
   @override
   final navigation nav = navigation();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _collegeController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _displayNameController = TextEditingController();
   final TextEditingController _yearsOfExperienceController = TextEditingController();
   String displayName = '';
+  String collegeName = '';
   bool isStudent = false;
   String email = '';
   String password = '';
@@ -62,7 +65,7 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
 
                             const Text('Sign Up', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
                             const SizedBox(height: 10.0),
-                            const Text('ALUMNI', style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
+                            const Text('College Buddy', style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
 
                             const SizedBox(height: 20.0),
               
@@ -92,7 +95,29 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                 });
                               },),
 
+                            const SizedBox(height: 20.0),
+                            TextField(
+                              controller: _collegeController,
+                              keyboardType: TextInputType.text,
+                              style: const TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
+                              decoration: const InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
 
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+
+                                ),
+                                labelText: 'Enter your college name', labelStyle: TextStyle(color: Colors.white),
+                                prefixIcon: Icon(Icons.person, color: Colors.white,),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  collegeName = value;
+                                });
+                              },),
 
                             const SizedBox(height: 20.0),
               
@@ -112,13 +137,15 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                     borderSide: BorderSide(color: Colors.white),
               
                                   ),
-                                  labelText: 'Enter your email', labelStyle: TextStyle(color: Colors.white),
+                                  labelText: 'Enter your college email', labelStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(Icons.email, color: Colors.white,),
                                 ),
               
-                                onChanged: (value) {
+                                onChanged: (value) async{
+                                  bool isOfficial = await verify(value, collegeName);
                                   bool isValid = EmailValidator.validate(value);
-                                  if (isValid) {
+                                  print(isOfficial);
+                                  if (isValid && isOfficial){
                                     setState(() {
                                       email = value;
                                       error = '';
@@ -229,7 +256,7 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                   setState(() {
                                     error = 'Password cannot contain spaces';
                                   });
-                                } else {
+                                } else if(error == ''){
                                   await Authentication_Services().Register(email, password, displayName, yearsOfExperience.toString(),isStudent,);
                                   navigation().navigateToPage(context, const Home());
                                 }

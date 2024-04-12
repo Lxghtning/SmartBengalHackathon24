@@ -17,7 +17,7 @@ void main() async{
   );
   //After initialization, building material app
   runApp(
-    MyApp(),
+    const MyApp(),
   );
 }
 

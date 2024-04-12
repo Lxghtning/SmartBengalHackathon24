@@ -14,7 +14,7 @@ class DatabaseService {
 
   // collection reference
   final CollectionReference brewCollection =
-      _firestore.collection('Users');
+      FirebaseFirestore.instance.collection('Users');
 
   /// The function sets initial user data in a Firestore document with various fields such as name,
   /// email, class, registration number, points, streak, course, and arrays for tracking progress.

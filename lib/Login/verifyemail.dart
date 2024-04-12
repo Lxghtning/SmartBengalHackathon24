@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:sbhconst/Components/myButton.dart';
-import 'package:sbhconst/Components/utils.dart';
-import 'package:sbhconst/Home/home.dart';
+import 'package:sbh24/Components/myButton.dart';
+import 'package:sbh24/Components/utils.dart';
+import 'package:sbh24/Home/home.dart';
 
 
 //deals with statuis of email verification

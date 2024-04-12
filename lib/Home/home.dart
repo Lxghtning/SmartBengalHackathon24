@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sbhconst/Components/NavBar.dart';
+import 'package:sbh24/Components/NavBar.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

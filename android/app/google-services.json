@@ -7,12 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:106238831613:android:bd2a7293c87cf34a5b4794",
+        "mobilesdk_app_id": "1:106238831613:android:5b79e818eef479585b4794",
         "android_client_info": {
-          "package_name": "com.sbhconst.sbhconst"
+          "package_name": "com.example.testing"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "106238831613-b0v6at57ahmrn5n4erpf55in9nkjsdks.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB5dNqq16Z216JB0s4g7q8UUfLGLbVeTsk"
@@ -20,7 +25,55 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "106238831613-b0v6at57ahmrn5n4erpf55in9nkjsdks.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "106238831613-97cf8nposv7ch3uotirno9sjje9fgnut.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.yashm.letsSee.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106238831613:android:bd2a7293c87cf34a5b4794",
+        "android_client_info": {
+          "package_name": "com.sbhconst.sbhconst"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "106238831613-b0v6at57ahmrn5n4erpf55in9nkjsdks.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5dNqq16Z216JB0s4g7q8UUfLGLbVeTsk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "106238831613-b0v6at57ahmrn5n4erpf55in9nkjsdks.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "106238831613-97cf8nposv7ch3uotirno9sjje9fgnut.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.yashm.letsSee.RunnerTests"
+              }
+            }
+          ]
         }
       }
     }

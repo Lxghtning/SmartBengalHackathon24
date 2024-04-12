@@ -4,14 +4,14 @@ import '/Firebase/Auth_Services.dart';
 import '/help_func.dart';
 import '/Firebase/Database_Services.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class SignUpALUMINI extends StatefulWidget {
+
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<SignUpALUMINI> createState() => _SignUpALUMINIState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignUpALUMINIState extends State<SignUpALUMINI> {
   @override
 
   final TextEditingController _emailController = TextEditingController();

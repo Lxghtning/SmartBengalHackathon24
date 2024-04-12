@@ -3,14 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
 import '/Firebase/Database_Services.dart';
 
-class SignIn extends StatefulWidget {
+class SignInALUMINI extends StatefulWidget {
 
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<SignInALUMINI> createState() => _SignInALUMINIState();
 }
 
-class _SignInState extends State<SignIn> {
+class _SignInALUMINIState extends State<SignInALUMINI> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   Database_Services database_services = Database_Services();

@@ -15,6 +15,7 @@ class _HomeState extends State<Home> {
       drawer: NavBar(),
       appBar: AppBar(
         backgroundColor: Colors.blue,
+
       ),
     );
   }

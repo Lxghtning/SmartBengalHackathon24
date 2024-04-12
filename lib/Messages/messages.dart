@@ -1,8 +1,6 @@
-import 'package:faker/faker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:jiffy/jiffy.dart';
 import 'package:sbh24/Components/NavBar.dart';
 import 'package:sbh24/Messages/messageBackend.dart';
 import '../Components/avatar.dart';

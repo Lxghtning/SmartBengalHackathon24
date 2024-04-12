@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:sbh24/Forum/forumBackend.dart';
+import '../Messages/messageBackend.dart';
 import '/Firebase/Auth_Services.dart';
 import '/help_func.dart';
 import '/Firebase/Database_Services.dart';
@@ -12,7 +15,9 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  @override
+
+  final messageDB msgdb = new messageDB();
+  final forumDatabase fdb = forumDatabase();
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -36,6 +41,7 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
 
@@ -225,13 +231,24 @@ class _SignUpState extends State<SignUp> {
                                   });
                                 } else {
                                   await Authentication_Services().Register(email, password, displayName, yearsOfExperience.toString(),isStudent,);
+
+                                  //Messages
+                                  await msgdb.addUser(displayName,
+                                      FirebaseAuth.instance.currentUser?.email,
+                                      FirebaseAuth.instance.currentUser?.uid,
+                                      "Online");
+
+                                  //Forum
+                                  await fdb.addUser(displayName,
+                                      FirebaseAuth.instance.currentUser?.uid);
+
                                   Navigator.pushReplacementNamed(context, '/');
                                 }
                               } catch (e) {
                                 setState(() {
                                   error = 'User already exists';
                                 });
-              
+
                               }
               
                             },

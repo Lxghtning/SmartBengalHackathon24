@@ -5,12 +5,15 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import '../Components/NavBar.dart';
+import '../Components/Navigators.dart';
 import '../Components/avatar.dart';
 import '../Components/helpers.dart';
 import '../Components/message_data.dart';
 import '../Components/theme.dart';
 import 'messageBackend.dart';
 import 'dart:core';
+
+import 'messages.dart';
 
 class Messaging extends StatefulWidget {
   //helper function
@@ -36,7 +39,7 @@ class Messaging extends StatefulWidget {
 
 class _MessagingState extends State<Messaging> {
 
-
+  final navigation nav = navigation();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +55,7 @@ class _MessagingState extends State<Messaging> {
           child: IconButton(
             icon: const Icon(Icons.arrow_back_ios,color: Colors.white,),
             onPressed: () {
-              Navigator.of(context).pop();
+              nav.navigateToPage(context, Messages());
             },
           ),
         ),
@@ -123,7 +126,6 @@ class _AppBarTitleState extends State<_AppBarTitle> {
 
   @override
   Widget build(BuildContext context) {
-    print(state);
     return Row(
       children: [
         Avatar.small(
@@ -242,7 +244,7 @@ class _MessagingBarState extends State<_MessagingBar> {
                       String time = DateFormat('HH:mm a').format(now);
 
                       await msgdb.sendMessage(FirebaseAuth.instance.currentUser?.uid, widget.messageData.senderName, message, time);
-                      await msgdb.receiveMessage(widget.messageData.senderName, 'Yash', message, time);
+                      await msgdb.receiveMessage(widget.messageData.senderName, FirebaseAuth.instance.currentUser?.uid, message, time);
                       Navigator.push(
                           context,
                           PageTransition(
@@ -355,8 +357,6 @@ class _MessageListState extends State<_MessageList> {
 
   @override
   Widget build(BuildContext context) {
-    print("m:");
-    print(messagesList);
     int msgIndex = 0;
     return Scaffold(
       backgroundColor: HexColor("#1b2a61"),
@@ -366,6 +366,9 @@ class _MessageListState extends State<_MessageList> {
             return ListView.builder(
               itemCount: boolean.length,
               itemBuilder: (context, index) {
+                if(messagesList.isEmpty){
+                  return Container();
+                }
                 if (isDateInFormat(messagesList[msgIndex])) {
                   Widget dateLabelWidget = buildWidget(msgIndex++);
                   if (boolean[index]) {

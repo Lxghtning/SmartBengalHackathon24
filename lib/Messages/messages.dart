@@ -2,7 +2,6 @@ import 'package:faker/faker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:jiffy/jiffy.dart';
 import 'package:sbh24/Components/NavBar.dart';
 import 'package:sbh24/Messages/messageBackend.dart';
 import '../Components/avatar.dart';
@@ -43,14 +42,24 @@ class _MessagesState extends State<Messages> {
     print(messengers);
   }
 
+  String messageData(List l, int index){
+    String data = " ";
+    try{
+      data = l[index];
+    }catch(Exception){
+      data = " ";
+    }
+    return data;
+  }
+
   Widget _delegate(BuildContext context, int index) {
     print("messengers $latestMessages");
     final currentDate = DateTime.now();
     return _MessageTitle(messageData: MessageData(
       senderName: messengers[index],
-      message: latestMessages.isEmpty ? " " : latestMessages[index],
+      message: messageData(latestMessages, index),
       messageDate: currentDate,
-      dateMessage: latestMessagesTimestamp.isEmpty ? " " : latestMessagesTimestamp[index],
+      dateMessage: messageData(latestMessagesTimestamp, index),
       profilePicture: Helpers.randomPictureUrl(),
     ));
   }
@@ -163,27 +172,27 @@ class _MessageTitle extends StatelessWidget {
                         letterSpacing: -0.2,
                       ),
                     ),
-                    const SizedBox(
-                      height: 8
-                    ),
-                    Container(
-                      width: 18,
-                      height: 18,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF3B76F6),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "1",
-                          style: TextStyle(
-                            color: Color(0xFFF5F5F5),
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    )
+                    // const SizedBox(
+                    //   height: 8
+                    // ),
+                    // Container(
+                    //   width: 18,
+                    //   height: 18,
+                    //   decoration: const BoxDecoration(
+                    //     color: Color(0xFF3B76F6),
+                    //     shape: BoxShape.circle,
+                    //   ),
+                    //   child: const Center(
+                    //     child: Text(
+                    //       "1",
+                    //       style: TextStyle(
+                    //         color: Color(0xFFF5F5F5),
+                    //         fontSize: 10,
+                    //         fontWeight: FontWeight.w600,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // )
                   ]
                 )
               )

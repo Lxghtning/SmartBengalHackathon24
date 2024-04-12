@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
       setStatusState("Online");
     } else if (state == AppLifecycleState.detached) {
       // App is terminated
-      setStatusState("Online");
+      setStatusState("Offline");
     }
   }
 
@@ -59,9 +59,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
     super.dispose();
   }
 
-  void setStatusState(state) async{
-    await msgdb.updateState('gF4LOJIn1oXAsNRTVpXsivSmf9j1', state);
+  void setStatusState(state) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await msgdb.updateState(user.uid, state);
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -1,8 +1,10 @@
+import 'package:sbh24/Forum/forum.dart';
 import 'package:sbh24/main.dart';
 import 'package:sbh24/Components/Navigators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import '../Messages/messageBackend.dart';
 import '../Messages/messages.dart';
 
 
@@ -11,14 +13,10 @@ class NavBar extends StatelessWidget {
   NavBar({super.key});
   //Navigation object
   final navigation nav = navigation();
+  final messageDB msgdb = messageDB();
 
   @override
   Widget build(BuildContext context) {
-
-    // ignore: unused_local_variable
-    //this checks the internet connection everywhere in app and as soon as internet goes off,
-    //as this widget is the common link to evry page in the app, pops to the main route, where no internet connection is handled by main.dart
-    // ignore: unused_local_variable
 
     TextStyle listtiletextstyle = const TextStyle(color: Colors.black,);
     String? name = FirebaseAuth.instance.currentUser!.emailVerified
@@ -97,7 +95,7 @@ class NavBar extends StatelessWidget {
             leading: const Icon(Icons.question_answer),
             title: Text('Forum', style: listtiletextstyle,),
             onTap: () => {
-
+              nav.navigateToPage(context, Forum())
             },
           ),
           ListTile(
@@ -128,7 +126,8 @@ class NavBar extends StatelessWidget {
           ListTile(
             title: Text('Log Out', style: listtiletextstyle,),
             leading: const Icon(Icons.exit_to_app),
-            onTap: () {
+            onTap: () async{
+              await msgdb.updateState(FirebaseAuth.instance.currentUser?.uid, "Offline");
               navigatorKey.currentState!.popUntil((route) => route.isFirst);
               FirebaseAuth.instance.signOut();
             },

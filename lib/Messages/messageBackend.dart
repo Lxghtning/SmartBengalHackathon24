@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
@@ -87,8 +89,13 @@ class messageDB {
 
   }
   Future<void> sendMessage(uid, name, message, time) async {
+    String currentUserName = await fetchNameFromUID(uid);
+    String receiverUID = await fetchUIDFromName(name);
+
     DateTime now = DateTime.now();
     String date = DateFormat('dd.MM.yyyy').format(now);
+    Timestamp createdTime = Timestamp.now();
+
     //Current User Messages sent list update
     DocumentReference<Map<String, dynamic>> documentRef = FirebaseFirestore
         .instance
@@ -99,8 +106,6 @@ class messageDB {
 
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef
         .get();
-
-
 
     if (documentSnapshot.exists) {
       //boolean value update in array
@@ -125,22 +130,25 @@ class messageDB {
         'messagesList': [message],
         'messagesBoolean': [true],
         'messagesTimestamp': [time],
+        'createdAt' : createdTime,
       });
       print('Document created with messagesSent list');
     }
 
     //Update latest message
-    await updateLatestMessage(name, uid);
+    await updateLatestMessage(currentUserName, receiverUID);
     print("updated");
 
   }
 
   //Person to whom the message was send, that is, messages received list update
-  Future<void> receiveMessage(receiverName, senderName,message,time) async{
+  Future<void> receiveMessage(receiverName, senderUID,message,time) async{
     String uid = await fetchUIDFromName(receiverName);
+    String senderName = await fetchNameFromUID(senderUID);
 
     DateTime now = DateTime.now();
     String date = DateFormat('dd.MM.yyyy').format(now);
+    Timestamp createdTime = Timestamp.now();
 
     DocumentReference<Map<String, dynamic>> documentRef = FirebaseFirestore
         .instance
@@ -173,12 +181,13 @@ class messageDB {
       await documentRef.set({
         'messagesList': [message],
         'messagesBoolean': [false],
-        'messagesTimestamp': [time]
+        'messagesTimestamp': [time],
+        'createdAt' : createdTime,
       });
       print('Document created with messagesSent list');
     }
 
-    await updateLatestMessage(senderName, uid);
+    await updateLatestMessage(receiverName, senderUID);
   }
 
   Future<String> fetchUIDFromName(name) async{
@@ -244,6 +253,7 @@ class messageDB {
   Future<String> userState(name) async{
     String uid = await fetchUIDFromName(name);
     String state = "";
+    print(uid);
     DocumentReference<Map<String, dynamic>> documentRef = await FirebaseFirestore
         .instance
         .collection('messages')
@@ -280,22 +290,18 @@ class messageDB {
     return messengers;
   }
 
+
   Future<void> updateLatestMessage(name, uid) async{
-    String receiverUID = await fetchUIDFromName(name);
-    String sName = await fetchNameFromUID(uid);
-    print("n");
-    print(name);
-    print(sName);
-    List receiverUsers = await sendChattingUsers(uid);
-    print(receiverUsers);
-    String userName = await fetchNameFromUID(uid);
-    int index = receiverUsers.indexOf(name);
+    String currentUserUID = await fetchUIDFromName(name);
+    List currentUserChattingUsers = await sendChattingUsers(uid);
+    String receiverUserName = await fetchNameFromUID(uid);
+    int index = currentUserChattingUsers.indexOf(name);
 
       QuerySnapshot<Map<String, dynamic>> querySnapshotReceiver = await FirebaseFirestore
           .instance
           .collection('messages')
-          .doc(receiverUID)
-          .collection(userName)
+          .doc(currentUserUID)
+          .collection(receiverUserName)
           .orderBy('createdAt', descending: true)
           .limit(1)
           .get();
@@ -303,7 +309,7 @@ class messageDB {
       DocumentReference<Map<String, dynamic>> documentRef= await FirebaseFirestore
           .instance
           .collection('messages')
-          .doc(receiverUID);
+          .doc(currentUserUID);
 
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef.get();
 
@@ -325,11 +331,12 @@ class messageDB {
           latestMessages.add(latestMessage);
           latestMessagesTimestamp.add(latestMessageTimestamp);
         }
+
+
         await documentRef.update({
           'latestMessages': latestMessages,
           'latestMessagesTimestamp': latestMessagesTimestamp,
         });
-        print(latestMessages);
       } else {
         print('No documents found in collection');
       }

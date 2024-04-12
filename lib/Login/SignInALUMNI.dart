@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:sbh24/Home/Home.dart';
 import '/Firebase/Database_Services.dart';
+import 'package:sbh24/Components/Navigators.dart';
+import 'SignUpALUMNI.dart';
 
-class SignInALUMINI extends StatefulWidget {
+class SignInALUMNI extends StatefulWidget {
 
 
   @override
-  State<SignInALUMINI> createState() => _SignInALUMINIState();
+  State<SignInALUMNI> createState() => _SignInALUMNIState();
 }
 
-class _SignInALUMINIState extends State<SignInALUMINI> {
+class _SignInALUMNIState extends State<SignInALUMNI> {
+  final navigation nav = navigation();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   Database_Services database_services = Database_Services();
@@ -36,15 +40,15 @@ class _SignInALUMINIState extends State<SignInALUMINI> {
 
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(70.0),
+                padding: const EdgeInsets.symmetric(vertical:70.0, horizontal: 50.0),
                 child: Container(
                   child: Column(
                     children: [
                       Image(image: AssetImage('assets/const_logo.png'), height: 100.0, width: 100.0,),
               
-                      Text('Sign Up', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
+                      Text('Sign In', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
                       SizedBox(height: 10.0),
-                      Text('Alumini', style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
+                      Text('ALUMNI', style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
               
                       SizedBox(height: 20.0),
               
@@ -154,6 +158,7 @@ class _SignInALUMINIState extends State<SignInALUMINI> {
                               }
                               else {
                                 await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+                                nav.navigateToPage(context, Home());
                               }
                             }
               
@@ -184,7 +189,7 @@ class _SignInALUMINIState extends State<SignInALUMINI> {
                         ,
                         TextButton(
                           onPressed: (){
-                            Navigator.pushNamed(context, '/signup');//TODO: Add the route to the sign up for Alumini page
+                            nav.navigateToPage(context, SignUpALUMNI());//TODO: Add the route to the sign up for ALUMNI page
                           },
                           child: Text('Sign Up', style: TextStyle(color: Colors.blue),),
                         )

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
 import '/Firebase/Database_Services.dart';
-
+import 'package:sbh24/Components/Navigators.dart';
+import 'package:sbh24/Login/SignUp.dart';
+import 'package:sbh24/Home/home.dart';
 class SignIn extends StatefulWidget {
 
 
@@ -11,6 +13,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  final navigation nav = navigation();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   Database_Services database_services = Database_Services();
@@ -78,7 +81,7 @@ class _SignInState extends State<SignIn> {
                         }
 
 
-                      ),
+                      ),//Email
 
                       SizedBox(height: 20.0),
 
@@ -111,7 +114,7 @@ class _SignInState extends State<SignIn> {
                           setState(() {
                             password = value;
                           });
-                        },),
+                        },),//Password
 
                         Align(
                           alignment: Alignment.centerLeft,
@@ -150,7 +153,7 @@ class _SignInState extends State<SignIn> {
                             }
                             else {
                               await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-                              Navigator.pushReplacementNamed(context, '/');
+                              nav.navigateToPage(context, Home());
                             }
                             }
 
@@ -181,7 +184,7 @@ class _SignInState extends State<SignIn> {
                         ,
                         TextButton(
                           onPressed: (){
-                            Navigator.pushNamed(context, '/signup');
+                            nav.navigateToPage(context, SignUp());
                           },
                           child: Text('Sign Up', style: TextStyle(color: Colors.blue),),
                         )

@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:sbh24/Home/Home.dart';
 import '/Firebase/Auth_Services.dart';
 import '/help_func.dart';
 import '/Firebase/Database_Services.dart';
 import 'package:sbh24/Components/Navigators.dart';
-import 'SignInALUMINI.dart';
+import 'SignInALUMNI.dart';
 
 
-class SignUpALUMINI extends StatefulWidget {
+class SignUpALUMNI extends StatefulWidget {
 
 
   @override
-  State<SignUpALUMINI> createState() => _SignUpALUMINIState();
+  State<SignUpALUMNI> createState() => _SignUpALUMNIState();
 }
 
-class _SignUpALUMINIState extends State<SignUpALUMINI> {
+class _SignUpALUMNIState extends State<SignUpALUMNI> {
   @override
   final navigation nav = navigation();
   final TextEditingController _emailController = TextEditingController();
@@ -49,7 +50,7 @@ class _SignUpALUMINIState extends State<SignUpALUMINI> {
 
             body: SingleChildScrollView(
               child: Padding(
-                  padding: const EdgeInsets.all(70.0),
+                  padding: const EdgeInsets.symmetric(vertical: 65.0, horizontal: 50.0),
                   child: Container(
                       child: Column(
                           children: [
@@ -59,7 +60,7 @@ class _SignUpALUMINIState extends State<SignUpALUMINI> {
               
                             Text('Sign Up', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
                             SizedBox(height: 10.0),
-                            Text('Alumini', style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
+                            Text('ALUMNI', style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
               
                             SizedBox(height: 20.0),
               
@@ -228,7 +229,7 @@ class _SignUpALUMINIState extends State<SignUpALUMINI> {
                                   });
                                 } else {
                                   await Authentication_Services().Register(email, password, displayName, yearsOfExperience.toString(),isStudent,);
-                                  Navigator.pushReplacementNamed(context, '/');
+                                  navigation().navigateToPage(context, Home());
                                 }
                               } catch (e) {
                                 setState(() {
@@ -249,7 +250,7 @@ class _SignUpALUMINIState extends State<SignUpALUMINI> {
                                 Text('Already have an account?', style: TextStyle(color: Colors.white),),
                                 TextButton(
                                   onPressed: () {
-                                    nav.navigateToPage(context, SignInALUMINI());   //TODO: Add the sign in Alumini page
+                                    nav.navigateToPage(context, SignInALUMNI());   //TODO: Add the sign in ALUMNI page
                                   },
                                   child: Text('Sign In', style: TextStyle(color: Colors.blue),),
                                 ),

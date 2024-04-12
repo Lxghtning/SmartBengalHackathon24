@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:sbh24/Components/Navigators.dart';
+import 'package:sbh24/Login/SignIn.dart';
+import 'package:sbh24/Login/dummySignUP.dart';
+import 'package:sbh24/Startup%20Screens/Grid.dart';
 import '/Firebase/Auth_Services.dart';
 import '/help_func.dart';
 import '/Firebase/Database_Services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sbh24/Startup Screens/Grid.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -247,7 +252,7 @@ class _SignUpState extends State<SignUp> {
                           //     FirebaseAuth.instance.currentUser?.uid,
                           //     "Online",
                           //     time);
-                          Navigator.pushReplacementNamed(context, '/');
+                          navigation().navigateToPage(context, DummySignUp());
                       }
                     } catch (e) {
                       setState(() {
@@ -268,7 +273,7 @@ class _SignUpState extends State<SignUp> {
                       Text('Already have an account?', style: TextStyle(color: Colors.white),),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/signin');
+                          navigation().navigateToPage(context, SignIn());
                         },
                         child: Text('Sign In', style: TextStyle(color: Colors.blue),),
                       ),

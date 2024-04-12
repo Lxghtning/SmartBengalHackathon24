@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sbh24/Components/Navigators.dart';
-import 'package:sbh24/Login/SignInALUMINI.dart';
+import 'package:sbh24/Login/SignInALUMNI.dart';
 import 'package:sbh24/Login/SignUp.dart';
-import 'package:sbh24/Login/SignUpALUMINI.dart';
+import 'package:sbh24/Login/SignUpALUMNI.dart';
 
 class Redirection extends StatelessWidget {
 
@@ -57,7 +57,7 @@ class Redirection extends StatelessWidget {
                     ),
                     child: TextButton.icon(
                       onPressed: () {
-                        nav.navigateToPage(context, SignUpALUMINI());
+                        nav.navigateToPage(context, SignUpALUMNI());
                       },
                       icon: Icon(Icons.person, color: Colors.white,),
                       label: Text('Sign Up as College Buddy', style: TextStyle(color: Colors.white, fontSize: 20.0),),

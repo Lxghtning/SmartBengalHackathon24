@@ -271,7 +271,7 @@ class _SignUpALUMINIState extends State<SignUpALUMINI> {
                                 Text('Already have an account?', style: TextStyle(color: Colors.white),),
                                 TextButton(
                                   onPressed: () {
-                                    nav.navigateToPage(context, SignIn());
+                                    nav.navigateToPage(context, SignIn());  
                                   },
                                   child: Text('Sign In', style: TextStyle(color: Colors.blue),),
                                 ),

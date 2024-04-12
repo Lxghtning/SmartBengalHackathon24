@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:sbh24/Components/Navigators.dart';
 import 'package:sbh24/Login/SignInALUMINI.dart';
 import 'package:sbh24/Login/SignUp.dart';
-nnimport 'package:sbh24/Login/SignUpALUMINI.dart';
+import 'package:sbh24/Login/SignUpALUMINI.dart';
 
 class Redirection extends StatelessWidget {
 

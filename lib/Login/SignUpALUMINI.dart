@@ -3,6 +3,9 @@ import 'package:email_validator/email_validator.dart';
 import '/Firebase/Auth_Services.dart';
 import '/help_func.dart';
 import '/Firebase/Database_Services.dart';
+import 'package:sbh24/Components/Navigators.dart';
+import 'SignInALUMINI.dart';
+
 
 class SignUpALUMINI extends StatefulWidget {
 
@@ -13,7 +16,7 @@ class SignUpALUMINI extends StatefulWidget {
 
 class _SignUpALUMINIState extends State<SignUpALUMINI> {
   @override
-
+  final navigation nav = navigation();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _displayNameController = TextEditingController();
@@ -246,7 +249,7 @@ class _SignUpALUMINIState extends State<SignUpALUMINI> {
                                 Text('Already have an account?', style: TextStyle(color: Colors.white),),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pushReplacementNamed(context, '/signin');   //TODO: Add the sign in Alumini page
+                                    nav.navigateToPage(context, SignInALUMINI());   //TODO: Add the sign in Alumini page
                                   },
                                   child: Text('Sign In', style: TextStyle(color: Colors.blue),),
                                 ),

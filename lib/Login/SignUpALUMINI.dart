@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import '../Home/Home.dart';
 import '/Firebase/Auth_Services.dart';
 import '/help_func.dart';
 import '/Firebase/Database_Services.dart';
-
+import 'SignIn.dart';
+import 'apiVerify.dart';
+import 'package:sbh24/Components/Navigators.dart';
 class SignUpALUMINI extends StatefulWidget {
 
 
@@ -13,16 +16,18 @@ class SignUpALUMINI extends StatefulWidget {
 
 class _SignUpALUMINIState extends State<SignUpALUMINI> {
   @override
-
+  final navigation nav = navigation();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _displayNameController = TextEditingController();
+  final TextEditingController _collegeNameController = TextEditingController();
   final TextEditingController _yearsOfExperienceController = TextEditingController();
   String displayName = '';
   bool isStudent = false;
   String email = '';
   String password = '';
   int yearsOfExperience = 0;
+  String collegeName = '';
   bool passview_off = true;
   String error = '';
 
@@ -50,25 +55,22 @@ class _SignUpALUMINIState extends State<SignUpALUMINI> {
                   child: Container(
                       child: Column(
                           children: [
-                            Image(image: AssetImage('assets/const_logo.png'), height: 100.0, width: 100.0,),
+                            Image(image: AssetImage('assets/const_logo.png'), height: 50.0, width: 100.0,),
               
               
-              
+                            //
                             Text('Sign Up', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
-                            SizedBox(height: 10.0),
-                            Text('Alumini', style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
-              
-                            SizedBox(height: 20.0),
-              
-              
+                            const SizedBox(height: 10.0),
+                            Text('College Buddy', style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
+
+                            const SizedBox(height: 20.0),
                             //Display Name
-              
                             TextField(
                               controller: _displayNameController,
                               keyboardType: TextInputType.text,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                               cursorColor: Colors.white,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.white),
               
@@ -85,6 +87,30 @@ class _SignUpALUMINIState extends State<SignUpALUMINI> {
                                   displayName = value;
                                 });
                               },),
+
+                            const SizedBox(height: 20.0),
+                            TextField(
+                              controller: _collegeNameController,
+                              keyboardType: TextInputType.text,
+                              style: const TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
+                              decoration: const InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+
+                                ),
+                                labelText: 'Enter your college name', labelStyle: TextStyle(color: Colors.white),
+                                prefixIcon: Icon(Icons.person, color: Colors.white,),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  collegeName = value;
+                                });
+                              },),
               
               
               
@@ -97,7 +123,7 @@ class _SignUpALUMINIState extends State<SignUpALUMINI> {
                                 keyboardType: TextInputType.emailAddress,
                                 style: TextStyle(color: Colors.white),
                                 cursorColor: Colors.white,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.white),
                                   ),
@@ -106,24 +132,23 @@ class _SignUpALUMINIState extends State<SignUpALUMINI> {
                                     borderSide: BorderSide(color: Colors.white),
               
                                   ),
-                                  labelText: 'Enter your email', labelStyle: TextStyle(color: Colors.white),
+                                  labelText: 'Enter your college email', labelStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(Icons.email, color: Colors.white,),
                                 ),
               
-                                onChanged: (value) {
+                                onChanged: (value) async{
                                   bool isValid = EmailValidator.validate(value);
-                                  if (isValid) {
+                                  bool official = await verify(email, collegeName);
+                                  if (isValid && official) {
                                     setState(() {
                                       email = value;
                                       error = '';
                                     });
-                                  } else {
+                                  } else if(!official){
                                     setState(() {
                                       email = value;
                                       error = 'Email is invalid';
-                                    }
-              
-                                    );
+                                    });
                                   }
                                 }
                             ),
@@ -176,7 +201,7 @@ class _SignUpALUMINIState extends State<SignUpALUMINI> {
               
                                 ),
                                 labelText: 'Years of Experience', labelStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(Icons.work, color: Colors.white,),
+                                prefixIcon: Icon(Icons.calendar_month, color: Colors.white,),
                               ),
                               onChanged: (value) {
                                 setState(() {
@@ -187,7 +212,7 @@ class _SignUpALUMINIState extends State<SignUpALUMINI> {
               
               
               
-                            SizedBox(height: 50.0),
+                            SizedBox(height: 20.0),
                             Align(
                               alignment: Alignment.center,
                               child: Text(error, style: TextStyle(color: Colors.red),),
@@ -225,7 +250,7 @@ class _SignUpALUMINIState extends State<SignUpALUMINI> {
                                   });
                                 } else {
                                   await Authentication_Services().Register(email, password, displayName, yearsOfExperience.toString(),isStudent,);
-                                  Navigator.pushReplacementNamed(context, '/');
+                                  nav.navigateToPage(context, Home());
                                 }
                               } catch (e) {
                                 setState(() {
@@ -246,7 +271,7 @@ class _SignUpALUMINIState extends State<SignUpALUMINI> {
                                 Text('Already have an account?', style: TextStyle(color: Colors.white),),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pushReplacementNamed(context, '/signin');   //TODO: Add the sign in Alumini page
+                                    nav.navigateToPage(context, SignIn());
                                   },
                                   child: Text('Sign In', style: TextStyle(color: Colors.blue),),
                                 ),

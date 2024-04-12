@@ -3,27 +3,39 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:sbh24/Forum/forumBackend.dart';
 import '../Messages/messageBackend.dart';
+import 'package:sbh24/Home/Home.dart';
+import 'package:sbh24/Login/apiVerify.dart';
 import '/Firebase/Auth_Services.dart';
 import '/help_func.dart';
 import '/Firebase/Database_Services.dart';
+import 'package:sbh24/Components/Navigators.dart';
+import 'SignInALUMNI.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+
+class SignUpALUMNI extends StatefulWidget {
+  const SignUpALUMNI({super.key});
+
+
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<SignUpALUMNI> createState() => _SignUpALUMNIState();
 }
 
-class _SignUpState extends State<SignUp> {
+
+class _SignUpALUMNIState extends State<SignUpALUMNI> {
+  @override
+  final navigation nav = navigation();
 
   final messageDB msgdb = new messageDB();
   final forumDatabase fdb = forumDatabase();
 
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _collegeController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _displayNameController = TextEditingController();
   final TextEditingController _yearsOfExperienceController = TextEditingController();
   String displayName = '';
+  String collegeName = '';
   bool isStudent = false;
   String email = '';
   String password = '';
@@ -46,25 +58,25 @@ class _SignUpState extends State<SignUp> {
     return MaterialApp(
 
         home: Scaffold(
-            backgroundColor: Color(0xff1B264F),
+            backgroundColor: const Color(0xff1B264F),
 
 
 
             body: SingleChildScrollView(
               child: Padding(
-                  padding: const EdgeInsets.all(70.0),
+                  padding: const EdgeInsets.symmetric(vertical: 65.0, horizontal: 50.0),
                   child: Container(
                       child: Column(
                           children: [
-                            Image(image: AssetImage('assets/const_logo.png'), height: 100.0, width: 100.0,),
-              
-              
-              
-                            Text('Sign Up', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
-                            SizedBox(height: 10.0),
-                            Text('Alumini', style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
-              
-                            SizedBox(height: 20.0),
+                            const Image(image: AssetImage('assets/const_logo.png'), height: 100.0, width: 100.0,),
+
+
+
+                            const Text('Sign Up', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
+                            const SizedBox(height: 10.0),
+                            const Text('College Buddy', style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
+
+                            const SizedBox(height: 20.0),
               
               
                             //Display Name
@@ -72,9 +84,9 @@ class _SignUpState extends State<SignUp> {
                             TextField(
                               controller: _displayNameController,
                               keyboardType: TextInputType.text,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                               cursorColor: Colors.white,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.white),
               
@@ -91,19 +103,41 @@ class _SignUpState extends State<SignUp> {
                                   displayName = value;
                                 });
                               },),
-              
-              
-              
-                            SizedBox(height: 20.0),
+
+                            const SizedBox(height: 20.0),
+                            TextField(
+                              controller: _collegeController,
+                              keyboardType: TextInputType.text,
+                              style: const TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
+                              decoration: const InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+
+                                ),
+                                labelText: 'Enter your college name', labelStyle: TextStyle(color: Colors.white),
+                                prefixIcon: Icon(Icons.person, color: Colors.white,),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  collegeName = value;
+                                });
+                              },),
+
+                            const SizedBox(height: 20.0),
               
                             //Email
               
                             TextField(
                                 controller: _emailController,
                                 keyboardType: TextInputType.emailAddress,
-                                style: TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white),
                                 cursorColor: Colors.white,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.white),
                                   ),
@@ -112,13 +146,15 @@ class _SignUpState extends State<SignUp> {
                                     borderSide: BorderSide(color: Colors.white),
               
                                   ),
-                                  labelText: 'Enter your email', labelStyle: TextStyle(color: Colors.white),
+                                  labelText: 'Enter your college email', labelStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(Icons.email, color: Colors.white,),
                                 ),
               
-                                onChanged: (value) {
+                                onChanged: (value) async{
+                                  bool isOfficial = await verify(value, collegeName);
                                   bool isValid = EmailValidator.validate(value);
-                                  if (isValid) {
+                                  print(isOfficial);
+                                  if (isValid && isOfficial){
                                     setState(() {
                                       email = value;
                                       error = '';
@@ -133,29 +169,29 @@ class _SignUpState extends State<SignUp> {
                                   }
                                 }
                             ),
-              
-                            SizedBox(height: 20.0),
+
+                            const SizedBox(height: 20.0),
                             TextField(
                               controller: _passwordController,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                               cursorColor: Colors.white,
                               obscureText: passview_off == true ? true : false,
                               decoration: InputDecoration(
                                 focusColor: Colors.white,
-                                focusedBorder: OutlineInputBorder(
+                                focusedBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.white),
               
                                 ),
               
-                                enabledBorder: OutlineInputBorder(
+                                enabledBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.white),
               
                                 ),
-                                labelText: 'Enter your password',labelStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(Icons.lock,color: Colors.white,),
-                                suffixIcon: passview_off ? IconButton(icon: Icon(Icons.visibility,color: Colors.white,), onPressed: () {setState(() {
+                                labelText: 'Enter your password',labelStyle: const TextStyle(color: Colors.white),
+                                prefixIcon: const Icon(Icons.lock,color: Colors.white,),
+                                suffixIcon: passview_off ? IconButton(icon: const Icon(Icons.visibility,color: Colors.white,), onPressed: () {setState(() {
                                   passview_off = false;
-                                });}) : IconButton(icon: Icon(Icons.visibility_off, color: Colors.white,), onPressed: () {setState(() {
+                                });}) : IconButton(icon: const Icon(Icons.visibility_off, color: Colors.white,), onPressed: () {setState(() {
                                   passview_off = true;
                                 });}),
               
@@ -165,14 +201,14 @@ class _SignUpState extends State<SignUp> {
                                   password = value;
                                 });
                               },),
-              
-                            SizedBox(height: 20.0),
+
+                            const SizedBox(height: 20.0),
                             TextField(
                               controller: _yearsOfExperienceController,
                               keyboardType: TextInputType.number,
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                               cursorColor: Colors.white,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.white),
               
@@ -189,14 +225,14 @@ class _SignUpState extends State<SignUp> {
                                   yearsOfExperience = int.parse(value);
                                 });
                               },),
-              
-              
-              
-              
-                            SizedBox(height: 50.0),
+
+
+
+
+                            const SizedBox(height: 50.0),
                             Align(
                               alignment: Alignment.center,
-                              child: Text(error, style: TextStyle(color: Colors.red),),
+                              child: Text(error, style: const TextStyle(color: Colors.red),),
                             ),
               
                             ElevatedButton(onPressed: ()async{
@@ -229,7 +265,7 @@ class _SignUpState extends State<SignUp> {
                                   setState(() {
                                     error = 'Password cannot contain spaces';
                                   });
-                                } else {
+                                } else if(error == ''){
                                   await Authentication_Services().Register(email, password, displayName, yearsOfExperience.toString(),isStudent,);
 
                                   //Messages
@@ -243,6 +279,8 @@ class _SignUpState extends State<SignUp> {
                                       FirebaseAuth.instance.currentUser?.uid);
 
                                   Navigator.pushReplacementNamed(context, '/');
+                                  navigation().navigateToPage(context, const Home());
+
                                 }
                               } catch (e) {
                                 setState(() {
@@ -252,20 +290,20 @@ class _SignUpState extends State<SignUp> {
                               }
               
                             },
-                              child: Text('Sign Up', style: TextStyle(fontSize: 15.0),),
+                              child: const Text('Sign Up', style: TextStyle(fontSize: 15.0),),
               
                             ),
-                            SizedBox(height: 10.0),
+                            const SizedBox(height: 10.0),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
               
                               children: [
-                                Text('Already have an account?', style: TextStyle(color: Colors.white),),
+                                const Text('Already have an account?', style: TextStyle(color: Colors.white),),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pushReplacementNamed(context, '/signin');   //TODO: Add the sign in Alumini page
+                                    nav.navigateToPage(context, const SignInALUMNI());   //TODO: Add the sign in ALUMNI page
                                   },
-                                  child: Text('Sign In', style: TextStyle(color: Colors.blue),),
+                                  child: const Text('Sign In', style: TextStyle(color: Colors.blue),),
                                 ),
               
                               ],

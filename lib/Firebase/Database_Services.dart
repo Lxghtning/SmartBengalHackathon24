@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+
 
 
  class Database_Services{
 
-  final CollectionReference alumini = FirebaseFirestore.instance.collection('alumini');
+  final CollectionReference ALUMNI = FirebaseFirestore.instance.collection('ALUMNI');
   final CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 //while signing up the user, this function will be called to add the user to the database
@@ -13,7 +13,7 @@ import 'package:flutter/cupertino.dart';
     if(isStudent)
       return updateUserData_Profile(uid, email, displayName, years, 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fadmin-user&psig=AOvVaw0X5O8GKOFqkAqB6FTeXt9l&ust=1712745872558000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIirm-X5tIUDFQAAAAAdAAAAABAE');
     else
-      return updateAluminiData_Profile(uid, email, displayName, years, 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fadmin-user&psig=AOvVaw0X5O8GKOFqkAqB6FTeXt9l&ust=1712745872558000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIirm-X5tIUDFQAAAAAdAAAAABAE');
+      return updateALUMNIData_Profile(uid, email, displayName, years, 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fadmin-user&psig=AOvVaw0X5O8GKOFqkAqB6FTeXt9l&ust=1712745872558000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIirm-X5tIUDFQAAAAAdAAAAABAE');
   }
   //while updating the user profile, this function will be called to update the user to the database for changing the photoURL of the user and generate an avatar of the user.
   Future updateUserData_Profile(String uid, String email, String displayName, String yearOfGrad, String photoURL) async {
@@ -25,9 +25,9 @@ import 'package:flutter/cupertino.dart';
         'photoURL': photoURL,
     });
   }
-   Future updateAluminiData_Profile(String uid, String email, String displayName, String yearsOfExperience, String photoURL) async {
+   Future updateALUMNIData_Profile(String uid, String email, String displayName, String yearsOfExperience, String photoURL) async {
      //TODO: Add isStudent field to the database
-     return await alumini.doc(uid).set({
+     return await ALUMNI.doc(uid).set({
        'email': email,
        'displayName': displayName,
        'yearsOfExperience': yearsOfExperience,

@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,6 +43,16 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyB6BzkoWyVu4CBzkDEDQF4mFjLmPNesd7c',
+    appId: '1:106238831613:web:f669c533150492f45b4794',
+    messagingSenderId: '106238831613',
+    projectId: 'sbhconst',
+    authDomain: 'sbhconst.firebaseapp.com',
+    storageBucket: 'sbhconst.appspot.com',
+    measurementId: 'G-CG0MWNT2DT',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyB5dNqq16Z216JB0s4g7q8UUfLGLbVeTsk',
     appId: '1:106238831613:android:bd2a7293c87cf34a5b4794',
@@ -63,6 +67,17 @@ class DefaultFirebaseOptions {
     messagingSenderId: '106238831613',
     projectId: 'sbhconst',
     storageBucket: 'sbhconst.appspot.com',
+    iosClientId: '106238831613-f5849n228qn5pfckepnus4mhp5296e48.apps.googleusercontent.com',
     iosBundleId: 'com.sbhconst.sbhconst',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCsVC_NrRw72Ws5asfG1BK0ZkFaNzrIPoI',
+    appId: '1:106238831613:ios:ae993bc4592f5b755b4794',
+    messagingSenderId: '106238831613',
+    projectId: 'sbhconst',
+    storageBucket: 'sbhconst.appspot.com',
+    iosClientId: '106238831613-97cf8nposv7ch3uotirno9sjje9fgnut.apps.googleusercontent.com',
+    iosBundleId: 'com.yashm.letsSee.RunnerTests',
   );
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import '/Components/Navigators.dart';
 import '/Login/SignIn.dart';
+import '/Startup Screens/Redirection.dart';
 
 class InitialSetup extends StatefulWidget {
   const InitialSetup({super.key});
@@ -95,7 +96,7 @@ class _InitialSetupState extends State<InitialSetup> {
                           child: ElevatedButton(
                             onPressed: ()
                             {
-                              navigation().navigateToPage(context, SignIn());
+                              navigation().navigateToPage(context, Redirection());
                             },
                             child:Text(messages[index],
                               style:const  TextStyle(

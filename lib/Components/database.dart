@@ -2,6 +2,7 @@
 /// database, including setting and updating user data, submitting project and feedback data, and
 /// retrieving leaderboard data.
 // ignore_for_file: non_constant_identifier_names, unused_catch_clause,
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sbh24/Components/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';

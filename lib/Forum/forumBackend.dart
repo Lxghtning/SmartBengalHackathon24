@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +9,7 @@ class forumDatabase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> addUser(name, uid) async{
-    return _firestore.collection('Forum')
+    return FirebaseFirestore.instance.collection('Forum')
         .doc(uid).set({
       'name': name,
       'uid': uid,
@@ -20,7 +21,7 @@ class forumDatabase {
 
   Future<List> getQuestions() async{
     List questions = [];
-    await _firestore.collection('Forum')
+    await FirebaseFirestore.instance.collection('Forum')
         .get()
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
@@ -33,7 +34,7 @@ class forumDatabase {
 
   Future<List> getAuthors() async{
     List authors = [];
-    await _firestore.collection('Forum')
+    await FirebaseFirestore.instance.collection('Forum')
         .get()
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
@@ -44,7 +45,7 @@ class forumDatabase {
   }
   
   Future<void> postQuestion(String uid, String question) async{
-    DocumentReference<Map<String, dynamic>> documentRef = await _firestore
+    DocumentReference<Map<String, dynamic>> documentRef = await FirebaseFirestore.instance
         .collection('Forum')
         .doc(uid);
 
@@ -59,7 +60,7 @@ class forumDatabase {
     String authorUID = await fetchUIDFromName(authorName);
     String replierName = await fetchNameFromUID(replierUID);
 
-    DocumentReference<Map<String, dynamic>> documentRef = await _firestore
+    DocumentReference<Map<String, dynamic>> documentRef = await FirebaseFirestore.instance
         .collection('Forum')
         .doc(authorUID)
         .collection(question)
@@ -85,7 +86,7 @@ class forumDatabase {
 
   Future<String> fetchUIDFromName(name) async{
     String uid="";
-    await _firestore.collection('Forum')
+    await FirebaseFirestore.instance.collection('Forum')
         .get()
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
@@ -100,7 +101,7 @@ class forumDatabase {
 
   Future<String> fetchNameFromUID(uid) async{
     String name="";
-    DocumentReference<Map<String, dynamic>> documentRef = await _firestore
+    DocumentReference<Map<String, dynamic>> documentRef = await FirebaseFirestore.instance
         .collection('Forum')
         .doc(uid);
 
@@ -115,12 +116,12 @@ class forumDatabase {
       List replies = [];
 
 
-      DocumentReference<Map<String, dynamic>> documentRef = await _firestore
+      DocumentReference<Map<String, dynamic>> documentRef = await FirebaseFirestore.instance
           .collection('Forum')
           .doc(authorUID);
 
       DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef.get();
-      await _firestore.collection('Forum')
+      await FirebaseFirestore.instance.collection('Forum')
           .doc(authorUID)
           .collection(question)
           .get()
@@ -138,12 +139,12 @@ class forumDatabase {
     List repliesAuthor = [];
 
 
-    DocumentReference<Map<String, dynamic>> documentRef = await _firestore
+    DocumentReference<Map<String, dynamic>> documentRef = await FirebaseFirestore.instance
         .collection('Forum')
         .doc(authorUID);
 
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef.get();
-    await _firestore.collection('Forum')
+    await FirebaseFirestore.instance.collection('Forum')
         .doc(authorUID)
         .collection(question)
         .get()

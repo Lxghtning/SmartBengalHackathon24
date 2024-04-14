@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
@@ -70,22 +68,22 @@ class messageDB {
     DocumentSnapshot<Map<String, dynamic>> documentSnap = await documentRef
         .get();
 
-      QuerySnapshot<Map<String, dynamic>> querySnapshot = await documentRef
-          .collection(name).get();
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await documentRef
+        .collection(name).get();
 
     if (querySnapshot.docs.isEmpty) {
-        await documentRef.collection(name).doc(date).set({
-          'messagesList': [],
-          'messagesBoolean': [],
-          'messagesTimestamp': [],
-          'createdAt': time,
-        });
+      await documentRef.collection(name).doc(date).set({
+        'messagesList': [],
+        'messagesBoolean': [],
+        'messagesTimestamp': [],
+        'createdAt': time,
+      });
 
-        await documentRef.update({
-          'users': FieldValue.arrayUnion([name]),
-        });
+      await documentRef.update({
+        'users': FieldValue.arrayUnion([name]),
+      });
 
-      }
+    }
 
   }
   Future<void> sendMessage(uid, name, message, time) async {
@@ -261,7 +259,7 @@ class messageDB {
 
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef.get();
 
-      state = documentSnapshot.data()!['state'];
+    state = documentSnapshot.data()!['state'];
 
     return state;
   }
@@ -297,49 +295,49 @@ class messageDB {
     String receiverUserName = await fetchNameFromUID(uid);
     int index = currentUserChattingUsers.indexOf(name);
 
-      QuerySnapshot<Map<String, dynamic>> querySnapshotReceiver = await FirebaseFirestore
-          .instance
-          .collection('messages')
-          .doc(currentUserUID)
-          .collection(receiverUserName)
-          .orderBy('createdAt', descending: true)
-          .limit(1)
-          .get();
+    QuerySnapshot<Map<String, dynamic>> querySnapshotReceiver = await FirebaseFirestore
+        .instance
+        .collection('messages')
+        .doc(currentUserUID)
+        .collection(receiverUserName)
+        .orderBy('createdAt', descending: true)
+        .limit(1)
+        .get();
 
-      DocumentReference<Map<String, dynamic>> documentRef= await FirebaseFirestore
-          .instance
-          .collection('messages')
-          .doc(currentUserUID);
+    DocumentReference<Map<String, dynamic>> documentRef= await FirebaseFirestore
+        .instance
+        .collection('messages')
+        .doc(currentUserUID);
 
-      DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef.get();
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef.get();
 
-      if (querySnapshotReceiver.docs.isNotEmpty) {
-        //Latest document data
-        List messagesList = querySnapshotReceiver.docs[0].data()['messagesList'];
-        List messagesTimestamp = querySnapshotReceiver.docs[0].data()['messagesTimestamp'];
+    if (querySnapshotReceiver.docs.isNotEmpty) {
+      //Latest document data
+      List messagesList = querySnapshotReceiver.docs[0].data()['messagesList'];
+      List messagesTimestamp = querySnapshotReceiver.docs[0].data()['messagesTimestamp'];
 
-        String latestMessage = messagesList[messagesList.length-1];
-        String latestMessageTimestamp = messagesTimestamp[messagesTimestamp.length-1];
+      String latestMessage = messagesList[messagesList.length-1];
+      String latestMessageTimestamp = messagesTimestamp[messagesTimestamp.length-1];
 
-        List latestMessages = documentSnapshot.data()!['latestMessages'];
-        List latestMessagesTimestamp = documentSnapshot.data()!['latestMessagesTimestamp'];
-        try{
-          latestMessages[index] = latestMessage;
-          latestMessagesTimestamp[index] = latestMessageTimestamp;
-        }
-        catch(Exception){
-          latestMessages.add(latestMessage);
-          latestMessagesTimestamp.add(latestMessageTimestamp);
-        }
-
-
-        await documentRef.update({
-          'latestMessages': latestMessages,
-          'latestMessagesTimestamp': latestMessagesTimestamp,
-        });
-      } else {
-        print('No documents found in collection');
+      List latestMessages = documentSnapshot.data()!['latestMessages'];
+      List latestMessagesTimestamp = documentSnapshot.data()!['latestMessagesTimestamp'];
+      try{
+        latestMessages[index] = latestMessage;
+        latestMessagesTimestamp[index] = latestMessageTimestamp;
       }
+      catch(Exception){
+        latestMessages.add(latestMessage);
+        latestMessagesTimestamp.add(latestMessageTimestamp);
+      }
+
+
+      await documentRef.update({
+        'latestMessages': latestMessages,
+        'latestMessagesTimestamp': latestMessagesTimestamp,
+      });
+    } else {
+      print('No documents found in collection');
+    }
   }
 
   Future<List> sendLatestMessageList(uid) async{

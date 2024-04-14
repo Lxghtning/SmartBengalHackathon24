@@ -8,8 +8,8 @@ import 'Startup Screens/1.dart';
 import 'firebase_options.dart';
 
 
-
 final navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(

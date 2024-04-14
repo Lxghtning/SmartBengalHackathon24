@@ -1,4 +1,5 @@
  import 'package:flutter/material.dart';
+import 'package:sbh24/Components/Navigators.dart';
 
 class Grid_Country extends StatelessWidget {
  List<String> country =['USA', 'Canada', 'United Kingdom', 'Australia', 'Germany', 'France', 'Netherlands', 'Singapore'];
@@ -11,7 +12,7 @@ class Grid_Country extends StatelessWidget {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Color(0xff1B264F),
-        title: Text('Select Country', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600,fontSize: 20.0,),),
+        title: Text('Select Country', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600,fontSize: 25.0,),),
         centerTitle: true,
         elevation: 0.0,
       ),
@@ -26,7 +27,9 @@ class Grid_Country extends StatelessWidget {
           itemCount: country.length,
           itemBuilder: (BuildContext context, int index) {
             return TextButton(
-              onPressed: () {},
+              onPressed: () {
+                navigation().navigateToPage(context, Grid_MainSubject());
+              },
               child: Column(
                 children: [
                   Image.asset(flags[index], height: 130, width: 130,),
@@ -42,3 +45,49 @@ class Grid_Country extends StatelessWidget {
     );
   }
 }
+
+class Grid_MainSubject extends StatelessWidget {
+  List<String>  Subjects= ['Accounts', 'Business', 'Chemistry', 'Civil Engineering', 'Computer Science','Dentistry','Economics',
+                          'Electrical Engineering', 'Law', 'Mathematics','Mechanical Engineering','Medicine','Physics'];
+  List<String> Icons = ['assets/subjects/accounting.png', 'assets/subjects/business.png', 'assets/subjects/chemistry.png', 'assets/subjects/civil.png', 'assets/subjects/computer.png',
+                        'assets/subjects/dentistry.png', 'assets/subjects/economics.png', 'assets/subjects/electrical.png', 'assets/subjects/law.png',
+                        'assets/subjects/mathematics.png', 'assets/subjects/mechanical.png', 'assets/subjects/medicine.png', 'assets/subjects/physics.png'];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xff1B264F),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Color(0xff1B264F),
+        title: Text('Select Main Subject', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600,fontSize: 25.0,),),
+        centerTitle: true,
+        elevation: 0.0,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
+          itemCount: Subjects.length,
+          itemBuilder: (BuildContext context, int index) {
+            return TextButton(
+              onPressed: () {},
+              child: Column(
+                children: [
+                  Image.asset(Icons[index], height: 110, width: 110,),
+                  Center(child: Text(Subjects[index], style: TextStyle(fontSize: 20, color: Colors.white),)),
+
+                ],
+              ),
+            );
+
+          },
+        ),
+      ),
+    );
+  }
+}
+

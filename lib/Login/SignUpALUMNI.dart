@@ -155,12 +155,14 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                   bool isValid = EmailValidator.validate(value);
                                   print(isOfficial);
                                   if (isValid && isOfficial){
+                                    // print('in if');
                                     setState(() {
                                       email = value;
                                       error = '';
                                     });
                                   } else {
                                     setState(() {
+                                      // print('in else');
                                       email = value;
                                       error = 'Email is invalid';
                                     }
@@ -189,9 +191,9 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                 ),
                                 labelText: 'Enter your password',labelStyle: const TextStyle(color: Colors.white),
                                 prefixIcon: const Icon(Icons.lock,color: Colors.white,),
-                                suffixIcon: passview_off ? IconButton(icon: const Icon(Icons.visibility,color: Colors.white,), onPressed: () {setState(() {
+                                suffixIcon: passview_off ? IconButton(icon: const Icon(Icons.visibility_off,color: Colors.white,), onPressed: () {setState(() {
                                   passview_off = false;
-                                });}) : IconButton(icon: const Icon(Icons.visibility_off, color: Colors.white,), onPressed: () {setState(() {
+                                });}) : IconButton(icon: const Icon(Icons.visibility, color: Colors.white,), onPressed: () {setState(() {
                                   passview_off = true;
                                 });}),
               
@@ -277,8 +279,6 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                   //Forum
                                   await fdb.addUser(displayName,
                                       FirebaseAuth.instance.currentUser?.uid);
-
-                                  Navigator.pushReplacementNamed(context, '/');
                                   navigation().navigateToPage(context, const Home());
 
                                 }

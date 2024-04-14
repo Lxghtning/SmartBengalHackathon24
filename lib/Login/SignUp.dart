@@ -151,9 +151,9 @@ class _SignUpState extends State<SignUp> {
                       ),
                       labelText: 'Enter your password',labelStyle: const TextStyle(color: Colors.white),
                       prefixIcon: const Icon(Icons.lock,color: Colors.white,),
-                      suffixIcon: passview_off ? IconButton(icon: const Icon(Icons.visibility,color: Colors.white,), onPressed: () {setState(() {
+                      suffixIcon: passview_off ? IconButton(icon: const Icon(Icons.visibility_off,color: Colors.white,), onPressed: () {setState(() {
                         passview_off = false;
-                      });}) : IconButton(icon: const Icon(Icons.visibility_off, color: Colors.white,), onPressed: () {setState(() {
+                      });}) : IconButton(icon: const Icon(Icons.visibility, color: Colors.white,), onPressed: () {setState(() {
                         passview_off = true;
                       });}),
           

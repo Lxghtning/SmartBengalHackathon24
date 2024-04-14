@@ -153,7 +153,6 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                 onChanged: (value) async{
                                   bool isOfficial = await verify(value, collegeName);
                                   bool isValid = EmailValidator.validate(value);
-                                  print(isOfficial);
                                   if (isValid && isOfficial){
                                     // print('in if');
                                     setState(() {

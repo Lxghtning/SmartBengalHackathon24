@@ -11,7 +11,7 @@ class navigation
         PageTransition(
           child:  page,
           type: PageTransitionType.fade,
-          duration: const Duration(milliseconds: 1000),
+          duration: const Duration(milliseconds: 500),
         ));
   }
 }

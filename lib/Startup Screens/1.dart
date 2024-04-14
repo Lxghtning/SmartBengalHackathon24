@@ -13,19 +13,22 @@ class InitialSetup extends StatefulWidget {
 
 class _InitialSetupState extends State<InitialSetup> {
   final images = [
-  "https://via.placeholder.com/313x281",
-  "https://via.placeholder.com/357x281",
-  "https://via.placeholder.com/221x228",
-  "https://via.placeholder.com/379x295",
+  "assets/dream_college_accepted_illustration.png",
+  "assets/online_consultation.png",
+  "assets/queries.png",
+  "assets/start_journey.png",
   ];
+  
   final messages = [
     "Get connected with a college buddy from your dream universities!",
-    "Have one on one live sessions with your college buddy!",
+    "Have one-on-one live sessions with your college buddy!",
     "Get Answers to all your Questions!",
     "Let's Get Started!"
   ];
+
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -54,8 +57,8 @@ class _InitialSetupState extends State<InitialSetup> {
                               fontSize: 30,
                             ),),
                           SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                          Center(child: Image.network(images[index])),
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                          Center(child: Image.asset(images[index], height: 300,)),
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.055),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Center(
@@ -90,24 +93,23 @@ class _InitialSetupState extends State<InitialSetup> {
                             fontSize: 30,
                           ),),
                         SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                        Center(child: Image.network(images[index])),
-                        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                        Center(child: Image.asset(images[index], height: 300,)),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.055),
                         Center(
                           child: ElevatedButton(
                             onPressed: ()
                             {
                               navigation().navigateToPage(context, Redirection());
                             },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.yellow,
+                              fixedSize: const Size(400, 50),
+                            ),
                             child:Text(messages[index],
-                              style:const  TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 20,
                               ),),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.yellow,
-
-
-                            ),
 
                           ),
                         )

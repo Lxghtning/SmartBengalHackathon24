@@ -1,13 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:sbh24/Components/NavBar.dart';
 
 import '../Components/Navigators.dart';
 import 'forumBackend.dart';
 
 class Forum extends StatefulWidget {
-  const Forum({Key? key}) : super(key: key);
+  const Forum({super.key});
 
   @override
   State<Forum> createState() => _ForumState();
@@ -51,22 +52,22 @@ class _ForumState extends State<Forum> {
         backgroundColor: Colors.transparent,
       ),// Assuming NavBar.dart contains your navigation drawer widget
       backgroundColor: HexColor("#1b2a61"),
-      body: FutureBuilder<void>(
-        future: _initDataFuture,
+      body: StreamBuilder<List<List<String>>>(
+        stream: _forumQuestionsStream, // Replace _forumQuestionsStream with your actual stream
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(),
             );
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
           } else {
+            List<List<String>> forumData = snapshot.data ?? [];
             return ListView.builder(
-              itemCount: forumQuestions.length,
+              itemCount: forumData.length,
               itemBuilder: (context, index) {
-                //Variables
-                String author = forumAuthors[index];
-                List questions = forumQuestions[index];
-
-                //Returning Column Widget
+                String author = forumData[index][0]; // Assuming author is the first element
+                List<String> questions = forumData[index].sublist(1); // Assuming questions start from the second element
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -78,7 +79,7 @@ class _ForumState extends State<Forum> {
             );
           }
         },
-      ),
+      ),Q
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
@@ -110,11 +111,19 @@ class _ForumState extends State<Forum> {
                       String question = _textFieldController.text;
                       if(!question.isEmpty){
                         await fdb.postQuestion(FirebaseAuth.instance.currentUser!.uid, question);
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                              child: Forum(),
+                              type: PageTransitionType.fade,
+                              duration: const Duration(milliseconds: 1),
+                            ));
+                        Navigator.of(context).pop();
                       }
                       setState(() {
                         _isExpanded = !_isExpanded;
                       });
-                      Navigator.of(context).pop();
+
                     },
                   ),
                 ],

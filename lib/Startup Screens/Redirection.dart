@@ -20,9 +20,15 @@ class Redirection extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 70, horizontal: 20.0),
               child: Column(
                 children: [
-                  Image(image: AssetImage('assets/const_logo.png'), height: 150.0, width: 150.0,),
-                  SizedBox(height: 10,),
-                  Text('Welcome to Const', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                   Image.asset("assets/const.png"),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                  const Text("Welcome To Const",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.13),
 
                   Column(

@@ -58,10 +58,9 @@ class _SignUpState extends State<SignUp> {
             child: Container(
               child: Column(
                 children: [
-                  const Image(image: AssetImage('assets/const_logo.png'), height: 100.0, width: 100.0,),
-
-
-
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                  Image.asset("assets/const.png"),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                   const Text('Sign Up', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
                   const SizedBox(height: 35.0),
           
@@ -126,7 +125,6 @@ class _SignUpState extends State<SignUp> {
                       email = value;
                       error = 'Email is invalid';
                     }
-          
                   );
                   }
                   }
@@ -217,7 +215,9 @@ class _SignUpState extends State<SignUp> {
                     child: Text(error, style: const TextStyle(color: Colors.red),),
                   ),
           
-                  ElevatedButton(onPressed: ()async{
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(fixedSize: const Size(400, 50)),
+                    onPressed: ()async{
                     bool isEmailExisting = await Database_Services().isEmailExisting(email);
                     try{
                       if(email == ''){
@@ -227,7 +227,6 @@ class _SignUpState extends State<SignUp> {
                       }
                       else if(isEmailExisting){
                         setState(() {
-                          print('Email already exists');
                           error = 'Email already exists';
                         });
                       }
@@ -261,12 +260,6 @@ class _SignUpState extends State<SignUp> {
                           FirebaseAuth.instance.currentUser?.uid);
 
                           Navigator.pushReplacementNamed(context, '/');
-                          // Timestamp time = Timestamp.now();
-                          // await msgdb.addUser(nameController.text.trim(),
-                          //     FirebaseAuth.instance.currentUser?.email,
-                          //     FirebaseAuth.instance.currentUser?.uid,
-                          //     "Online",
-                          //     time);
                           navigation().navigateToPage(context, const DummySignUp());
                       }
                     } catch (e) {

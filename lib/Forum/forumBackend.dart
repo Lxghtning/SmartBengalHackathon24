@@ -8,6 +8,7 @@ class forumDatabase {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+
   Future<void> addUser(name, uid) async{
     return FirebaseFirestore.instance.collection('Forum')
         .doc(uid).set({
@@ -49,11 +50,14 @@ class forumDatabase {
         .collection('Forum')
         .doc(uid);
 
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+    await documentRef.get();
+    List<dynamic> currentQuestions = documentSnapshot.data()!['question'];
+
     // Update the document
     await documentRef.update({
-      'question': FieldValue.arrayUnion([question]),
+      'question': [question, ...currentQuestions],
     });
-
   }
 
   Future<void> postReply(String authorName, String question, String reply, String replierUID) async{
@@ -156,5 +160,7 @@ class forumDatabase {
 
     return repliesAuthor;
   }
+
+
 
 }

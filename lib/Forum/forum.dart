@@ -52,22 +52,22 @@ class _ForumState extends State<Forum> {
         backgroundColor: Colors.transparent,
       ),// Assuming NavBar.dart contains your navigation drawer widget
       backgroundColor: HexColor("#1b2a61"),
-      body: StreamBuilder<List<List<String>>>(
-        stream: _forumQuestionsStream, // Replace _forumQuestionsStream with your actual stream
+      body: FutureBuilder<void>(
+        future: _initDataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(),
             );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
           } else {
-            List<List<String>> forumData = snapshot.data ?? [];
             return ListView.builder(
-              itemCount: forumData.length,
+              itemCount: forumQuestions.length,
               itemBuilder: (context, index) {
-                String author = forumData[index][0]; // Assuming author is the first element
-                List<String> questions = forumData[index].sublist(1); // Assuming questions start from the second element
+                //Variables
+                String author = forumAuthors[index];
+                List questions = forumQuestions[index];
+
+                //Returning Column Widget
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -79,7 +79,7 @@ class _ForumState extends State<Forum> {
             );
           }
         },
-      ),Q
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
@@ -111,6 +111,7 @@ class _ForumState extends State<Forum> {
                       String question = _textFieldController.text;
                       if(!question.isEmpty){
                         await fdb.postQuestion(FirebaseAuth.instance.currentUser!.uid, question);
+                        Navigator.of(context).pop();
                         Navigator.push(
                             context,
                             PageTransition(
@@ -118,12 +119,10 @@ class _ForumState extends State<Forum> {
                               type: PageTransitionType.fade,
                               duration: const Duration(milliseconds: 1),
                             ));
-                        Navigator.of(context).pop();
                       }
                       setState(() {
                         _isExpanded = !_isExpanded;
                       });
-
                     },
                   ),
                 ],
@@ -284,6 +283,12 @@ class _DisplayForumRepliesState extends State<_DisplayForumReplies> {
                 await fdb.postReply(widget.author, widget.question, reply, FirebaseAuth.instance.currentUser!.uid);
                 _replyController.clear();
                 Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => _DisplayForumReplies(question: widget.question, author: widget.author)
+                  ),
+                );
               },
               child: Text('OK'),
             ),
@@ -303,14 +308,6 @@ class _DisplayForumRepliesAnswers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => _DisplayForumReplies(question: forumQuestion, author: forumAuthor)
-          ),
-        );
-      },
       child: Card(
         margin: EdgeInsets.all(8),
         child: ListTile(

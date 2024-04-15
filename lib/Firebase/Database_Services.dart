@@ -72,27 +72,51 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
    Future<List> sendAlumniReviews(String name) async{
      String uid = await fetchUIDFromName(name);
+     List r=[];
      DocumentReference<
          Map<String, dynamic>> documentRef = await FirebaseFirestore.instance.collection("ALUMNI")
          .doc(uid);
 
      DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef
          .get();
-     List r= documentSnapshot.data()!['reviewComments'];
+     r= documentSnapshot.data()!['reviewComments'];
      return r;
    }
 
    Future<List> sendAlumniReviewsAuthor(String name) async{
      String uid = await fetchUIDFromName(name);
-     DocumentReference<
-         Map<String, dynamic>> documentRef = await FirebaseFirestore.instance.collection("ALUMNI")
-         .doc(uid);
 
-     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef
-         .get();
-     List r= documentSnapshot.data()!['reviewAuthors'];
+     List r = [];
+     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await FirebaseFirestore.instance.collection("ALUMNI").doc(uid).get();
+
+     r= documentSnapshot.data()!['reviewAuthors'];
+
      return r;
    }
+
+  Future<String> sendStudentPhotoUrl(String name) async{
+    String uid = await fetchUIDFromNameStudent(name);
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await FirebaseFirestore.instance.collection("users").doc(uid).get();
+    print(documentSnapshot.data());
+    String r= documentSnapshot.data()!['photoURL'];
+
+    return r;
+  }
+
+  Future<String> sendPhotoUrl(String name) async{
+    String uid = await fetchUIDFromName(name);
+    DocumentReference<
+        Map<String, dynamic>> documentRef = await FirebaseFirestore.instance.collection("ALUMNI")
+        .doc(uid);
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef
+        .get();
+
+    String r= documentSnapshot.data()!['photoURL'];
+    print(r);
+    return r;
+  }
 
    Future<String> fetchUIDFromName(name) async{
      String uid="";
@@ -100,7 +124,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
          .get()
          .then((QuerySnapshot querySnapshot) {
        for (var doc in querySnapshot.docs) {
-         if (doc['name'] == name) {
+         if (doc['displayName'] == name) {
            uid = doc['uid'];
            break;
          }
@@ -108,6 +132,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
      });
      return uid;
    }
+
+  Future<String> fetchUIDFromNameStudent(name) async{
+    String uid="";
+    await users
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        if (doc['displayName'] == name) {
+          uid = doc['uid'];
+          break;
+        }
+      }
+    });
+    return uid;
+  }
 
   Future <bool> isEmailExisting(String email) async {
     bool isEmailExisting = false;

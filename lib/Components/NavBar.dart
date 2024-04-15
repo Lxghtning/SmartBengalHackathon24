@@ -1,4 +1,5 @@
 import 'package:sbh24/Forum/forum.dart';
+import 'package:sbh24/Profile/Profile.dart';
 import 'package:sbh24/Startup%20Screens/Grid.dart';
 import 'package:sbh24/main.dart';
 import 'package:sbh24/Components/Navigators.dart';
@@ -110,7 +111,7 @@ class NavBar extends StatelessWidget {
             leading: const Icon(Icons.person),
             title: Text('Profile', style: listtiletextstyle,),
             onTap: () {
-
+                    nav.navigateToPage(context, Profile());
                   }),
           const Divider(
             indent: 0,

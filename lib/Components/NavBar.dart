@@ -112,7 +112,7 @@ class NavBar extends StatelessWidget {
             leading: const Icon(Icons.person),
             title: Text('Profile', style: listtiletextstyle,),
             onTap: () {
-                navigation().navigateToPage(context, ProfilePage());
+                nav.navigateToPage(context, ProfilePage());
                   }),
           const Divider(
             indent: 0,

@@ -6,17 +6,18 @@ class CollegeBuddyProfileDisplay extends StatefulWidget {
   const CollegeBuddyProfileDisplay({Key? key, required this.alumniName}) : super(key: key);
   final alumniName;
 
-
   @override
   State<CollegeBuddyProfileDisplay> createState() =>
       _CollegeBuddyProfileDisplayState();
 }
 
-class _CollegeBuddyProfileDisplayState extends State<CollegeBuddyProfileDisplay> {
+class _CollegeBuddyProfileDisplayState
+    extends State<CollegeBuddyProfileDisplay> {
   List reviewAuthors = [];
   List reviewComments = [];
   String collegeName = "";
   String yearsOfExperience = "";
+  List studentsPhotoUrl = [];
   late Future<void> _initDataFuture;
   final db = Database_Services();
 
@@ -31,13 +32,21 @@ class _CollegeBuddyProfileDisplayState extends State<CollegeBuddyProfileDisplay>
     List rc = await db.sendAlumniReviews(widget.alumniName);
     String c = await db.sendAlumniCollege(widget.alumniName);
     String yoe = await db.sendAlumniYOE(widget.alumniName);
+    List spu = [];
+    for(int i=0; i<ra.length;i++){
+      String s = await db.sendStudentPhotoUrl(widget.alumniName);
+      spu.add(s);
+    }
+
     setState(() {
       reviewAuthors = ra;
       reviewComments = rc;
       collegeName = c;
       yearsOfExperience = yoe;
+      studentsPhotoUrl = spu;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +148,6 @@ class _CollegeBuddyProfileDisplayState extends State<CollegeBuddyProfileDisplay>
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-
                     ),
                   ),
                   SizedBox(height: 10),
@@ -200,6 +208,61 @@ class _CollegeBuddyProfileDisplayState extends State<CollegeBuddyProfileDisplay>
                 color: Colors.white,
               ),
             ),
+            // Display review authors and comments
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: reviewAuthors.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+                    title: Text(
+                      reviewAuthors[index],
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        reviewComments[index],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                    leading: CircleAvatar(
+                      child: ClipOval(
+                        child: studentsPhotoUrl[index] != null && studentsPhotoUrl[index] != ""
+                            ? Image(
+                          image: NetworkImage(studentsPhotoUrl[index]),
+                          height: 100.0,
+                          width: 100.0,
+                          fit: BoxFit.cover,
+                        )
+                            : Icon(
+                          Icons.person, // Default person icon
+                          size: 25, // Adjust size as needed
+                        ),
+                      ),
+                    ),
+
+                    onTap: () {
+
+                    },
+                  ),
+                );
+              },
+            ),
+
           ],
         ),
       ),

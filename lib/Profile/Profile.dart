@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sbh24/Components/NavBar.dart';
 import 'dart:io';
 import 'package:sbh24/Components/Navigators.dart';
 import 'package:sbh24/Firebase/Database_Services.dart';
@@ -64,6 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavBar(),
       backgroundColor: Color(0xff1B264F),
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),

@@ -1,4 +1,5 @@
 import 'package:sbh24/Forum/forum.dart';
+import 'package:sbh24/Profile/Profile.dart';
 import 'package:sbh24/Startup%20Screens/Grid.dart';
 import 'package:sbh24/main.dart';
 import 'package:sbh24/Components/Navigators.dart';
@@ -110,19 +111,12 @@ class NavBar extends StatelessWidget {
             leading: const Icon(Icons.person),
             title: Text('Profile', style: listtiletextstyle,),
             onTap: () {
-
+                navigation().navigateToPage(context, ProfilePage());
                   }),
           const Divider(
             indent: 0,
             endIndent: 0,
             thickness: 2,
-          ),
-          ListTile(
-            title: Text('Log In', style: listtiletextstyle,),
-            leading: const Icon(Icons.login),
-            onTap: () {
-
-            },
           ),
           ListTile(
             title: Text('Log Out', style: listtiletextstyle,),

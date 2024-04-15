@@ -256,6 +256,7 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                   });
                                 } else if(_passwordController.text.length < 6){
                                   setState(() {
+
                                     error = 'Password must be at least 6 characters';
                                   });
                                 } else if(containsSpace(password)){

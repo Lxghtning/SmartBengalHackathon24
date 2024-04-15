@@ -3,8 +3,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sbh24/Components/NavBar.dart';
 import 'package:sbh24/Const/collegeBuddyDisplay.dart';
-
-
+import 'package:sbh24/Startup Screens/Grid.dart';
+import 'collegesFetch.dart';
 class CollegeDisplay extends StatefulWidget {
   const CollegeDisplay({super.key});
 
@@ -13,14 +13,25 @@ class CollegeDisplay extends StatefulWidget {
 }
 
 class _CollegeDisplayState extends State<CollegeDisplay> {
-  List<Map<String, String>> colleges = [
-    {"name": "Harvard", "region": "Cambridge, MA"},
-    {"name": "MIT", "region": "Cambridge, MA"},
-    // Add more colleges as needed
-  ];
-
-  List<bool> selected = List.generate(2, (_) => false); // Maintain a list to track selected items
+  List<Map<String,dynamic>> colleges = [];
+  List<bool> selected = []; // Maintain a list to track selected items
   bool anyItemSelected = false;
+  int countryIndex = giveCountry();
+  int subjectIndex = giveSubject();
+  String err = '';
+  @override
+  void initState() {
+    super.initState();
+    fetchData(); // Fetch data in initState
+  }
+
+  void fetchData()async {
+    var fetchedColleges = await Colleges().collegesSend(Grid_Country().country[countryIndex], Grid_MainSubject().Subjects[subjectIndex]);
+    setState(() {
+      colleges = fetchedColleges;
+      selected = List.generate(colleges.length, (_) => false);// Update colleges list and refresh UI
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +61,9 @@ class _CollegeDisplayState extends State<CollegeDisplay> {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
+            child: colleges.isEmpty
+                ? const Center(child: CircularProgressIndicator()) // Show loading indicator
+                : ListView.builder(
               itemCount: colleges.length,
               itemBuilder: (context, index) {
                 return Card(
@@ -62,13 +75,13 @@ class _CollegeDisplayState extends State<CollegeDisplay> {
                   child: ListTile(
                     leading: CircleAvatar(
                       child: Text(
-                        colleges[index]["name"]![0],
+                        colleges[index]['Name'][0],
                         style: TextStyle(color: Colors.white),
                       ),
                       backgroundColor: Colors.blue,
                     ),
                     title: Text(
-                      colleges[index]["name"]!,
+                      colleges[index]['Name'],
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Row(
@@ -76,7 +89,7 @@ class _CollegeDisplayState extends State<CollegeDisplay> {
                         Icon(Icons.location_on, color: Colors.grey, size: 18),
                         SizedBox(width: 4),
                         Text(
-                          "Region: ${colleges[index]["region"]}",
+                          "Region: ${colleges[index]['City']}",
                           style: TextStyle(fontSize: 14, color: Colors.grey),
                         ),
                       ],

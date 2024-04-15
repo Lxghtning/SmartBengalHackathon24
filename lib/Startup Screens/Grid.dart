@@ -2,10 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:sbh24/Components/Navigators.dart';
 import 'package:sbh24/Const/collegeDisplay.dart';
 
-class Grid_Country extends StatelessWidget {
-  List<String> country =['USA', 'Canada', 'United Kingdom', 'Australia', 'Germany', 'France', 'Netherlands', 'Singapore'];
-  List<String> flags = ['assets/flags/united-states.png', 'assets/flags/canada.png', 'assets/flags/united-kingdom.png', 'assets/flags/australia.png', 'assets/flags/germany.png', 'assets/flags/france.png', 'assets/flags/netherlands.png', 'assets/flags/singapore.png'];
+int countryIndex = -1;
+int subjectIndex = -1;
 
+giveCountry(){
+  return countryIndex;
+}
+giveSubject(){
+  return subjectIndex;
+}
+class Grid_Country extends StatelessWidget {
+  List<String> country =['United States', 'Canada', 'United Kingdom', 'Australia', 'Germany', 'France', 'Netherlands', 'Singapore'];
+  List<String> flags = ['assets/flags/united-states.png', 'assets/flags/canada.png', 'assets/flags/united-kingdom.png', 'assets/flags/australia.png', 'assets/flags/germany.png', 'assets/flags/france.png', 'assets/flags/netherlands.png', 'assets/flags/singapore.png'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +37,7 @@ class Grid_Country extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) {
             return TextButton(
               onPressed: () {
+                countryIndex = index;
                 navigation().navigateToPage(context, Grid_MainSubject());
               },
               child: Column(
@@ -48,7 +57,7 @@ class Grid_Country extends StatelessWidget {
 }
 
 class Grid_MainSubject extends StatelessWidget {
-  List<String>  Subjects= ['Accounts', 'Business', 'Chemistry', 'Civil Engineering', 'Computer Science','Dentistry','Economics',
+  List<String>  Subjects= ['Accounting and Finance', 'Business Studies', 'Chemistry', 'Civil Engineering', 'Computer Science','Dentistry','Economics',
     'Electrical Engineering', 'Law', 'Mathematics','Mechanical Engineering','Medicine','Physics'];
   List<String> Icons = ['assets/subjects/accounting.png', 'assets/subjects/business.png', 'assets/subjects/chemistry.png', 'assets/subjects/civil.png', 'assets/subjects/computer.png',
     'assets/subjects/dentistry.png', 'assets/subjects/economics.png', 'assets/subjects/electrical.png', 'assets/subjects/law.png',
@@ -79,6 +88,8 @@ class Grid_MainSubject extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.3,
                   child: GestureDetector(
                     onTap: () {
+                      print(Subjects[index]);
+                      subjectIndex = index;
                       navigation().navigateToPage(context, CollegeDisplay());
                     },
                     child: Column(

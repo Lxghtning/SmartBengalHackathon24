@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Colleges{
-  Future<List> collegesSend(String country, String course) async{
-    List name= [];
+  Future<List<Map<String,dynamic>>> collegesSend(String country, String course) async{
+    List<Map<String,dynamic>> college = [];
     await FirebaseFirestore
         .instance
         .collection('Colleges')
@@ -11,11 +11,12 @@ class Colleges{
         .get()
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
-        if (doc['country'] == country) {
-          name.add(doc['name']);
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        if (data['Country'] == country) {
+          college.add(data);
         }
       }
     });
-    return name;
+    return college;
   }
 }

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:sbh24/Components/NavBar.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:sbh24/Const/collegeBuddyProfileDisplay.dart';
+
+
+import 'collegeDisplay.dart';
 
 class CollegeBuddyDisplay extends StatefulWidget {
   const CollegeBuddyDisplay({super.key});
@@ -20,8 +24,23 @@ class _CollegeBuddyDisplayState extends State<CollegeBuddyDisplay> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: HexColor("#1b2a61"),
-      drawer: NavBar(),
       appBar: AppBar(
+        leading: Align(
+          alignment: Alignment.centerRight,
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back_ios,color: Colors.white,),
+            onPressed: () {
+              Navigator.push(
+                context,
+                PageTransition(
+                  child: CollegeDisplay(),
+                  type: PageTransitionType.fade,
+                  duration: const Duration(milliseconds: 500),
+                ),
+              );
+            },
+          ),
+        ),
         backgroundColor: Colors.transparent,
       ),
       body: ListView.builder(
@@ -55,7 +74,14 @@ class _CollegeBuddyDisplayState extends State<CollegeBuddyDisplay> {
                 ),
                 trailing: Icon(Icons.arrow_forward_ios),
                 onTap: () {
-                  // Handle onTap if needed
+                Navigator.push(
+                context,
+                PageTransition(
+                child: CollegeBuddyProfileDisplay(),
+                type: PageTransitionType.fade,
+                duration: const Duration(milliseconds: 500),
+              ),
+            );
                 },
               ),
             ),

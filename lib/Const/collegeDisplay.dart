@@ -4,7 +4,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:sbh24/Components/NavBar.dart';
 import 'package:sbh24/Const/collegeBuddyDisplay.dart';
 
-import '../Components/Navigators.dart';
 
 class CollegeDisplay extends StatefulWidget {
   const CollegeDisplay({super.key});
@@ -20,6 +19,9 @@ class _CollegeDisplayState extends State<CollegeDisplay> {
     // Add more colleges as needed
   ];
 
+  List<bool> selected = List.generate(2, (_) => false); // Maintain a list to track selected items
+  bool anyItemSelected = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +29,23 @@ class _CollegeDisplayState extends State<CollegeDisplay> {
       drawer: NavBar(),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        actions: [
+          if (anyItemSelected)
+            IconButton(
+              icon: Icon(Icons.arrow_forward_ios, color: Colors.white),
+              onPressed: () {
+                // Navigate to the next screen here
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    child: CollegeBuddyDisplay(),
+                    type: PageTransitionType.fade,
+                    duration: const Duration(milliseconds: 500),
+                  ),
+                );
+              },
+            ),
+        ],
       ),
       body: Column(
         children: [
@@ -43,10 +62,10 @@ class _CollegeDisplayState extends State<CollegeDisplay> {
                   child: ListTile(
                     leading: CircleAvatar(
                       child: Text(
-                        colleges[index]["name"]![0], // Displaying the first character of college name
+                        colleges[index]["name"]![0],
                         style: TextStyle(color: Colors.white),
                       ),
-                      backgroundColor: Colors.blue, // You can customize the background color
+                      backgroundColor: Colors.blue,
                     ),
                     title: Text(
                       colleges[index]["name"]!,
@@ -62,9 +81,14 @@ class _CollegeDisplayState extends State<CollegeDisplay> {
                         ),
                       ],
                     ),
-                    trailing: Icon(Icons.arrow_forward_ios),
+                    trailing: selected[index]
+                        ? Icon(Icons.check_circle, color: Colors.green) // Display tick icon if selected
+                        : SizedBox.shrink(), // Otherwise, hide the trailing icon
                     onTap: () {
-                      navigation().navigateToPage(context, CollegeBuddyDisplay());
+                      setState(() {
+                        selected[index] = !selected[index]; // Toggle selection
+                        anyItemSelected = selected.any((element) => element);
+                      });
                     },
                   ),
                 );
@@ -76,22 +100,23 @@ class _CollegeDisplayState extends State<CollegeDisplay> {
             child: ElevatedButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    PageTransition(
-                      child:  CollegeBuddyDisplay(),
-                      type: PageTransitionType.fade,
-                      duration: const Duration(milliseconds: 500),
-                    ));
+                  context,
+                  PageTransition(
+                    child: CollegeBuddyDisplay(),
+                    type: PageTransitionType.fade,
+                    duration: const Duration(milliseconds: 500),
+                  ),
+                );
               },
               child: Text(
                 "Continue without choosing a college",
-                style: TextStyle(color: Colors.white ,fontSize: 16),
+                style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Button background color
-                padding: EdgeInsets.all(16), // Button padding
+                backgroundColor: Colors.blue,
+                padding: EdgeInsets.all(16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12), // Button border radius
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
             ),

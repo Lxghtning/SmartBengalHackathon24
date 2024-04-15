@@ -26,7 +26,7 @@ class NavBar extends StatelessWidget {
         ? FirebaseAuth.instance.currentUser!.displayName.toString():"Guest";
     String? email =  FirebaseAuth.instance.currentUser!.email.toString();
     return Drawer(
-      backgroundColor: Colors.white.withOpacity(0.8),
+      backgroundColor: Colors.white,
       child: ListView(
         // Remove padding
         padding: EdgeInsets.zero,

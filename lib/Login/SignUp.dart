@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:sbh24/Forum/forum.dart';
 import 'package:sbh24/Forum/forumBackend.dart';
+import 'package:sbh24/Login/VerifyEmail.dart';
 import 'package:sbh24/Messages/messageBackend.dart';
 import 'package:sbh24/Components/Navigators.dart';
 import 'package:sbh24/Login/SignIn.dart';
-import 'package:sbh24/Login/dummySignUP.dart';
 import '/Firebase/Auth_Services.dart';
 import '/help_func.dart';
 import '/Firebase/Database_Services.dart';
@@ -259,8 +260,7 @@ class _SignUpState extends State<SignUp> {
                                       await fdb.addUser(displayName,
                                           FirebaseAuth.instance.currentUser?.uid);
 
-                                      Navigator.pushReplacementNamed(context, '/');
-                                      navigation().navigateToPage(context, const DummySignUp());
+                                      navigation().navigateToPage(context, const VerifyEmailPage());
                                     }
                                   } catch (e) {
                                     setState(() {

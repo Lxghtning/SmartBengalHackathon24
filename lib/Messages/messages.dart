@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -51,15 +53,19 @@ class _MessagesState extends State<Messages> {
     return data;
   }
 
+  Future<String> fetchphotoURLFromUID(String uid) async{
+    String url = await msgdb.fetchphotoURLFromUID(uid);
+    return url;
+  }
+
   Widget _delegate(BuildContext context, int index) {
-    print("messengers $latestMessages");
     final currentDate = DateTime.now();
     return _MessageTitle(messageData: MessageData(
       senderName: messengers[index],
       message: messageData(latestMessages, index),
       messageDate: currentDate,
       dateMessage: messageData(latestMessagesTimestamp, index),
-      profilePicture: Helpers.randomPictureUrl(),
+      profilePicture: fetchphotoURLFromUID(messengers[index]).toString(),
     ));
   }
 

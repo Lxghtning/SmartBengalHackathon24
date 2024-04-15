@@ -1,5 +1,8 @@
-
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 
 
@@ -16,7 +19,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
         'email': email,
         'displayName': displayName,
         'yearOfGrad': yearOfGrad,
-        'photoURL': '',
+        'photoURL': 'https://t4.ftcdn.net/jpg/00/65/77/27/360_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg',
         'uid': uid,
     });
   }
@@ -26,11 +29,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
        'email': email,
        'displayName': displayName,
        'yearsOfExperience': yearsOfExperience,
-       'photoURL': '',
+       'photoURL': 'https://t4.ftcdn.net/jpg/00/65/77/27/360_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg',
        'reviewAuthors':[],
        'reviewComments': [],
        'collegeName': collegeName,
        'uid': uid,
+       'rating': [],
      });
    }
 
@@ -68,6 +72,50 @@ import 'package:cloud_firestore/cloud_firestore.dart';
         .get();
     String c = documentSnapshot.data()!['collegeName'];
     return c;
+  }
+
+  Future<void> postReview(String name, String uid, String review, double rating) async{
+    String uidALUMNI = await fetchUIDFromName(name);
+    String author = await fetchNameFromUID(uid);
+
+    DocumentReference<
+        Map<String, dynamic>> documentRef = await FirebaseFirestore.instance.collection("ALUMNI")
+        .doc(uidALUMNI);
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef
+        .get();
+
+      final ratingList = documentSnapshot.data()!['rating'];
+      ratingList.add(rating);
+      final reviewAuthor = documentSnapshot.data()!['reviewAuthors'];
+      final reviewComments = documentSnapshot.data()!['reviewComments'];
+      reviewComments.add(review);
+
+      bool given = false;
+      for(int index=0; index<reviewAuthor.length; index++) {
+        if(reviewAuthor[index]==author) given = true;
+      }
+
+      if(!given) {
+        await documentRef.update({
+          'reviewComments': reviewComments,
+          'reviewAuthors': FieldValue.arrayUnion([author]),
+          'rating': ratingList,
+        });
+      }
+  }
+
+  Future<List> sendAlumniRating(String name) async{
+    String uid = await fetchUIDFromName(name);
+    List r=[];
+    DocumentReference<
+        Map<String, dynamic>> documentRef = await FirebaseFirestore.instance.collection("ALUMNI")
+        .doc(uid);
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef
+        .get();
+    r= documentSnapshot.data()!['rating'];
+    return r;
   }
 
    Future<List> sendAlumniReviews(String name) async{
@@ -133,6 +181,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
      return uid;
    }
 
+  Future<String> fetchNameFromUID(uid) async{
+    String name="";
+    DocumentReference<Map<String, dynamic>> documentRef = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(uid);
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef.get();
+
+    name = documentSnapshot.data()!['displayName'];
+    return name;
+
+  }
+
   Future<String> fetchUIDFromNameStudent(name) async{
     String uid="";
     await users
@@ -173,5 +235,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
       }
     });
     return userData;
+  }
+  Future<void> uploadImage(File file, String uid) async {
+    try {
+      Reference ref = FirebaseStorage.instance.ref().child('profile_images/$uid');
+      UploadTask uploadTask = ref.putFile(file);
+      await uploadTask.whenComplete(() => null);
+      String downloadUrl = await ref.getDownloadURL();
+      await users.doc(uid).update({'photoURL': downloadUrl});
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

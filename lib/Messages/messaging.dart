@@ -483,8 +483,9 @@ class _MessageTile extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Avatar.small(
-            url: messageData.profilePicture,
+          CircleAvatar(
+            radius: 18, // Set the radius to a small size
+            backgroundImage: NetworkImage(messageData.profilePicture), // Provide the image URL
           ),
           const SizedBox(width: 8),
           Expanded(

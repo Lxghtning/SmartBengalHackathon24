@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sbh24/Components/NavBar.dart';
 import 'dart:io';
 import 'package:sbh24/Components/Navigators.dart';
+import 'package:sbh24/Components/database.dart';
 import 'package:sbh24/Firebase/Database_Services.dart';
 import 'package:sbh24/Startup%20Screens/1.dart';
 import 'package:sbh24/help_func.dart';
@@ -31,19 +32,23 @@ class _ProfilePageState extends State<ProfilePage> {
       this.userData = userData;
     });
   }
+
   User user = FirebaseAuth.instance.currentUser!;
   String yearOfGrad = '';
   bool anyChanges = false;
   List<dynamic>? years = help_func().yearOfGradDropDown();
-  File? _image;
   final picker = ImagePicker();
   List<String> colleges = ['Mit', 'Harvard', 'Yale University', 'Caltech', 'University of Toronto', 'National University of Singapore'];
+
+
   Future getImageFromGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    setState(() {
+    setState(()async {
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
+        await Database_Services().uploadImage(File(pickedFile.path), user.uid);
+        await getUserData();
+        print(pickedFile.path);
       } else {
         print('No image selected.');
       }
@@ -52,10 +57,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future getImageFromCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
-
-    setState(() {
+    
+    setState(() async{
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
+        await Database_Services().uploadImage(File(pickedFile.path), user.uid);
+        await getUserData();
       } else {
         print('No image selected.');
       }
@@ -132,8 +138,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     child: CircleAvatar(
                       radius: 50,
-                      backgroundImage: _image != null ? FileImage(_image!) : null,
-                      child: _image == null
+                      backgroundImage: userData['photoURL']!= null ? NetworkImage(userData['photoURL']!) : null,
+                      child: userData['photoURL']== ''
                           ? Icon(Icons.person, size: 50) // Placeholder icon
                           : null,
                     ),

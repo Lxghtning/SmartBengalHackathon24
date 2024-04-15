@@ -78,11 +78,11 @@ class _CollegeBuddyDisplayState extends State<CollegeBuddyDisplay> {
                 trailing: Icon(Icons.arrow_forward_ios),
                 onTap: () {
                 Navigator.push(
-                context,
-                PageTransition(
-                child: CollegeBuddyProfileDisplay(alumniName : alumniNames[index]),
-                type: PageTransitionType.fade,
-                duration: const Duration(milliseconds: 500),
+                  context,
+                  PageTransition(
+                  child: CollegeBuddyProfileDisplay(alumniName : alumniNames[index]),
+                  type: PageTransitionType.fade,
+                  duration: const Duration(milliseconds: 500),
                 ),
               );
                 },

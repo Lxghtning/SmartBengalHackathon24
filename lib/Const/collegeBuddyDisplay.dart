@@ -4,6 +4,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:sbh24/Const/collegeBuddyProfileDisplay.dart';
 
 
+import '../Firebase/Database_Services.dart';
 import 'collegeDisplay.dart';
 
 class CollegeBuddyDisplay extends StatefulWidget {
@@ -14,11 +15,23 @@ class CollegeBuddyDisplay extends StatefulWidget {
 }
 
 class _CollegeBuddyDisplayState extends State<CollegeBuddyDisplay> {
-  List<Map<String, String>> colleges = [
-    {"name": "Yash", "region": "Cambridge, MA"},
-    {"name": "Jagrit", "region": "Cambridge, MA"},
-    // Add more colleges as needed
-  ];
+
+  late Future<void> _initDataFuture;
+  final db =  Database_Services();
+  List alumniNames = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _initDataFuture = initData();
+  }
+
+  Future<void> initData() async {
+    List an = await db.sendALUMNINames();
+    setState(() {
+      alumniNames = an;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +57,7 @@ class _CollegeBuddyDisplayState extends State<CollegeBuddyDisplay> {
         backgroundColor: Colors.transparent,
       ),
       body: ListView.builder(
-        itemCount: colleges.length,
+        itemCount: alumniNames.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -59,29 +72,19 @@ class _CollegeBuddyDisplayState extends State<CollegeBuddyDisplay> {
                   child: Icon(Icons.person, color: Colors.white),
                 ),
                 title: Text(
-                  colleges[index]["name"]!,
+                  alumniNames[index],
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                subtitle: Row(
-                  children: [
-                    Icon(Icons.location_on, color: Colors.grey, size: 18),
-                    SizedBox(width: 4),
-                    Text(
-                      "Region: ${colleges[index]["region"]}",
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                  ],
                 ),
                 trailing: Icon(Icons.arrow_forward_ios),
                 onTap: () {
                 Navigator.push(
                 context,
                 PageTransition(
-                child: CollegeBuddyProfileDisplay(),
+                child: CollegeBuddyProfileDisplay(alumniName : alumniNames[index]),
                 type: PageTransitionType.fade,
                 duration: const Duration(milliseconds: 500),
-              ),
-            );
+                ),
+              );
                 },
               ),
             ),

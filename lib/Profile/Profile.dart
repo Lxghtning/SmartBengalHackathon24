@@ -206,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   alignment: Alignment.bottomRight,
                                   child: ElevatedButton(
                                     onPressed: () {
-                                      Database_Services().updateUserData_Profile(user.uid, user.displayName!, user.email!, yearOfGrad, '');
+                                      Database_Services().updateUserData_Profile(user.uid, user.displayName!, user.email!, yearOfGrad,);
                                       Navigator.pop(context);
                                       Navigator.push(
                                           context,

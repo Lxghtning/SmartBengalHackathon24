@@ -8,34 +8,106 @@ import 'package:cloud_firestore/cloud_firestore.dart';
   final CollectionReference ALUMNI = FirebaseFirestore.instance.collection('ALUMNI');
   final CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-//while signing up the user, this function will be called to add the user to the database
-  Future updateUserData_SignUp(String uid, String email, String displayName, String years, isStudent) async {
-    //TODO: Add isStudent field to the database
-    if(isStudent)
-      return updateUserData_Profile(uid, email, displayName, years, 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fadmin-user&psig=AOvVaw0X5O8GKOFqkAqB6FTeXt9l&ust=1712745872558000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIirm-X5tIUDFQAAAAAdAAAAABAE');
-    else
-      return updateALUMNIData_Profile(uid, email, displayName, years, 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fadmin-user&psig=AOvVaw0X5O8GKOFqkAqB6FTeXt9l&ust=1712745872558000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIirm-X5tIUDFQAAAAAdAAAAABAE');
-  }
+
   //while updating the user profile, this function will be called to update the user to the database for changing the photoURL of the user and generate an avatar of the user.
-  Future updateUserData_Profile(String uid, String email, String displayName, String yearOfGrad, String photoURL) async {
+  Future updateUserData_Profile(String uid, String email, String displayName, String yearOfGrad) async {
     //TODO: Add isStudent field to the database
     return await users.doc(uid).set({
         'email': email,
         'displayName': displayName,
         'yearOfGrad': yearOfGrad,
-        'photoURL': photoURL,
+        'photoURL': '',
+        'uid': uid,
     });
   }
-   Future updateALUMNIData_Profile(String uid, String email, String displayName, String yearsOfExperience, String photoURL) async {
+   Future updateALUMNIData_Profile(String collegeName, String uid, String email, String displayName, String yearsOfExperience) async {
      //TODO: Add isStudent field to the database
      return await ALUMNI.doc(uid).set({
        'email': email,
        'displayName': displayName,
        'yearsOfExperience': yearsOfExperience,
-       'photoURL': photoURL,
+       'photoURL': '',
+       'reviewAuthors':[],
+       'reviewComments': [],
+       'collegeName': collegeName,
+       'uid': uid,
      });
    }
 
+  Future<List> sendALUMNINames() async{
+    List alumniNames = [];
+    await ALUMNI
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        alumniNames.add(doc['displayName']);
+        }
+      });
+    return alumniNames;
+  }
+
+  Future<String> sendAlumniYOE(String name) async{
+    String uid = await fetchUIDFromName(name);
+    DocumentReference<
+        Map<String, dynamic>> documentRef = await FirebaseFirestore.instance.collection("ALUMNI")
+        .doc(uid);
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef
+        .get();
+    String yoe = documentSnapshot.data()!['yearsOfExperience'];
+    return yoe;
+  }
+
+  Future<String> sendAlumniCollege(String name) async{
+    String uid = await fetchUIDFromName(name);
+    DocumentReference<
+        Map<String, dynamic>> documentRef = await FirebaseFirestore.instance.collection("ALUMNI")
+        .doc(uid);
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef
+        .get();
+    String c = documentSnapshot.data()!['collegeName'];
+    return c;
+  }
+
+   Future<List> sendAlumniReviews(String name) async{
+     String uid = await fetchUIDFromName(name);
+     DocumentReference<
+         Map<String, dynamic>> documentRef = await FirebaseFirestore.instance.collection("ALUMNI")
+         .doc(uid);
+
+     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef
+         .get();
+     List r= documentSnapshot.data()!['reviewComments'];
+     return r;
+   }
+
+   Future<List> sendAlumniReviewsAuthor(String name) async{
+     String uid = await fetchUIDFromName(name);
+     DocumentReference<
+         Map<String, dynamic>> documentRef = await FirebaseFirestore.instance.collection("ALUMNI")
+         .doc(uid);
+
+     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef
+         .get();
+     List r= documentSnapshot.data()!['reviewAuthors'];
+     return r;
+   }
+
+   Future<String> fetchUIDFromName(name) async{
+     String uid="";
+     await ALUMNI
+         .get()
+         .then((QuerySnapshot querySnapshot) {
+       for (var doc in querySnapshot.docs) {
+         if (doc['name'] == name) {
+           uid = doc['uid'];
+           break;
+         }
+       }
+     });
+     return uid;
+   }
 
   Future <bool> isEmailExisting(String email) async {
     bool isEmailExisting = false;

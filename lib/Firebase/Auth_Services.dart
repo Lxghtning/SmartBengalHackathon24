@@ -21,7 +21,7 @@ class Authentication_Services {
     }
   }
 
-  Future RegisterAlumni(String collegeName, String email, String password,String displayName, String years,bool isStudent) async {
+  Future RegisterAlumni(String collegeName, String email, String password,String displayName, String years) async {
     //TODO: Add isStudent field to the database
     try {
       await _auth.createUserWithEmailAndPassword(email: email, password: password);

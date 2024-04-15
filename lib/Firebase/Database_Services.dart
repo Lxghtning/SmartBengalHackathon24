@@ -31,6 +31,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
        'reviewComments': [],
        'collegeName': collegeName,
        'uid': uid,
+       'rating': [],
      });
    }
 
@@ -68,6 +69,50 @@ import 'package:cloud_firestore/cloud_firestore.dart';
         .get();
     String c = documentSnapshot.data()!['collegeName'];
     return c;
+  }
+
+  Future<void> postReview(String name, String uid, String review, double rating) async{
+    String uidALUMNI = await fetchUIDFromName(name);
+    String author = await fetchNameFromUID(uid);
+
+    DocumentReference<
+        Map<String, dynamic>> documentRef = await FirebaseFirestore.instance.collection("ALUMNI")
+        .doc(uidALUMNI);
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef
+        .get();
+
+      final ratingList = documentSnapshot.data()!['rating'];
+      ratingList.add(rating);
+      final reviewAuthor = documentSnapshot.data()!['reviewAuthors'];
+      final reviewComments = documentSnapshot.data()!['reviewComments'];
+      reviewComments.add(review);
+
+      bool given = false;
+      for(int index=0; index<reviewAuthor.length; index++) {
+        if(reviewAuthor[index]==author) given = true;
+      }
+
+      if(!given) {
+        await documentRef.update({
+          'reviewComments': reviewComments,
+          'reviewAuthors': FieldValue.arrayUnion([author]),
+          'rating': ratingList,
+        });
+      }
+  }
+
+  Future<List> sendAlumniRating(String name) async{
+    String uid = await fetchUIDFromName(name);
+    List r=[];
+    DocumentReference<
+        Map<String, dynamic>> documentRef = await FirebaseFirestore.instance.collection("ALUMNI")
+        .doc(uid);
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef
+        .get();
+    r= documentSnapshot.data()!['rating'];
+    return r;
   }
 
    Future<List> sendAlumniReviews(String name) async{
@@ -132,6 +177,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
      });
      return uid;
    }
+
+  Future<String> fetchNameFromUID(uid) async{
+    String name="";
+    DocumentReference<Map<String, dynamic>> documentRef = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(uid);
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef.get();
+
+    name = documentSnapshot.data()!['displayName'];
+    return name;
+
+  }
 
   Future<String> fetchUIDFromNameStudent(name) async{
     String uid="";

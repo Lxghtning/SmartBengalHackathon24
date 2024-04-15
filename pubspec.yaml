@@ -49,6 +49,7 @@ dependencies:
   jiffy: ^6.3.0
   http: ^1.2.1
   image_picker: ^1.0.8
+  flutter_rating_bar: ^4.0.1
 
 
 

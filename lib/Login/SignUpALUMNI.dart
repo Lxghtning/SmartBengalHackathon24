@@ -267,7 +267,7 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                     error = 'Password cannot contain spaces';
                                   });
                                 } else if(error == ''){
-                                  await Authentication_Services().Register(email, password, displayName, yearsOfExperience.toString(),isStudent,);
+                                  await Authentication_Services().RegisterAlumni(email, password, displayName, yearsOfExperience.toString(),isStudent,);
 
                                   //Messages
                                   await msgdb.addUser(displayName,

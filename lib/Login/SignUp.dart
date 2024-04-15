@@ -247,7 +247,7 @@ class _SignUpState extends State<SignUp> {
                           error = 'Password cannot contain spaces';
                         });
                       } else {
-                          await Authentication_Services().Register(email, password, displayName, yearOfGrad, isStudent);
+                          await Authentication_Services().RegisterStudent(email, password, displayName, yearOfGrad, isStudent);
 
                           //Messages
                           await msgdb.addUser(displayName,

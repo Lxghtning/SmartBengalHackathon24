@@ -1,6 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:sbh24/Firebase/Database_Services.dart';
+
+import '../Messages/messageBackend.dart';
+import '../Messages/messages.dart';
 
 class CollegeBuddyProfileDisplay extends StatefulWidget {
   const CollegeBuddyProfileDisplay({Key? key, required this.alumniName}) : super(key: key);
@@ -13,6 +18,7 @@ class CollegeBuddyProfileDisplay extends StatefulWidget {
 
 class _CollegeBuddyProfileDisplayState
     extends State<CollegeBuddyProfileDisplay> {
+
   List reviewAuthors = [];
   List reviewComments = [];
   String collegeName = "";
@@ -20,7 +26,7 @@ class _CollegeBuddyProfileDisplayState
   List studentsPhotoUrl = [];
   late Future<void> _initDataFuture;
   final db = Database_Services();
-
+  final msgdb = messageDB();
   @override
   void initState() {
     super.initState();
@@ -171,7 +177,16 @@ class _CollegeBuddyProfileDisplayState
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      msgdb.addReceptor(widget.alumniName, FirebaseAuth.instance.currentUser?.uid);
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                            child:  Messages(),
+                            type: PageTransitionType.fade,
+                            duration: const Duration(milliseconds: 1),
+                          ));
+                    },
                     child: Text('Message', style: TextStyle(color: Colors.black)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.amber,

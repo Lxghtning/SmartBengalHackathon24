@@ -30,7 +30,7 @@ class _CollegeBuddyProfileDisplayState extends State<CollegeBuddyProfileDisplay>
     List ra = await db.sendAlumniReviewsAuthor(widget.alumniName);
     List rc = await db.sendAlumniReviews(widget.alumniName);
     String c = await db.sendAlumniCollege(widget.alumniName);
-    String yoe = await db.sendAlumniYOE(widget.name);
+    String yoe = await db.sendAlumniYOE(widget.alumniName);
     setState(() {
       reviewAuthors = ra;
       reviewComments = rc;
@@ -192,6 +192,14 @@ class _CollegeBuddyProfileDisplayState extends State<CollegeBuddyProfileDisplay>
               ],
             ),
             SizedBox(height: 50),
+            Text(
+              'Reviews',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
           ],
         ),
       ),

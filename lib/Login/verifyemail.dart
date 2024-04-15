@@ -29,7 +29,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
       sendVerificationEmail();
       timer = Timer.periodic(
         const Duration(seconds: 2),
-        (_) => checkEmailVerified(),
+            (_) => checkEmailVerified(),
       ); // Timer. periodic
     }
   }
@@ -67,25 +67,25 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   Widget build(BuildContext context) => isEmailVerified || FirebaseAuth.instance.currentUser!.email.toString() == "guest@srimalcards.in"
       ?  const Home()
       : Scaffold(
-          backgroundColor: HexColor("#4169E1"),
-          appBar: AppBar(
-            backgroundColor: HexColor("#4169E1"),
-            title: const Text("Verify Email"),
-          ),
-          body: SingleChildScrollView(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 24),
-              const Text("A verification email has been sent",
-                  style: TextStyle(
-                      fontFamily: "Sarabun",
-                      fontSize: 30,
-                      color: Colors.white)),
-              const SizedBox(height: 24),
-              MyButton(onTap: sendVerificationEmail, text: "Resend Email"),
-              const SizedBox(height: 24),
-              MyButton(onTap: signOut, text: "Cancel"),
-            ],
-          )));
+      backgroundColor: HexColor("#4169E1"),
+      appBar: AppBar(
+        backgroundColor: HexColor("#4169E1"),
+        title: const Text("Verify Email"),
+      ),
+      body: SingleChildScrollView(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 24),
+                const Text("A verification email has been sent",
+                    style: TextStyle(
+                        fontFamily: "Sarabun",
+                        fontSize: 30,
+                        color: Colors.white)),
+                const SizedBox(height: 24),
+                MyButton(onTap: sendVerificationEmail, text: "Resend Email"),
+                const SizedBox(height: 24),
+                MyButton(onTap: signOut, text: "Cancel"),
+              ],
+              )));
 }

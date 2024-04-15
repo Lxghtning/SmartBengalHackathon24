@@ -154,8 +154,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
       for(var doc in querySnapshot.docs){
         print(doc['email']);
         if(doc['email'] == email){
-          print(email);
-          print(true);
           isEmailExisting = true;
         }
       }

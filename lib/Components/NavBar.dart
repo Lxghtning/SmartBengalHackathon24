@@ -97,7 +97,7 @@ class NavBar extends StatelessWidget {
             leading: const Icon(Icons.question_answer),
             title: Text('Forum', style: listtiletextstyle,),
             onTap: () => {
-              nav.navigateToPage(context, Forum())
+              // nav.navigateToPage(context, Forum())
             },
           ),
           ListTile(
@@ -111,19 +111,12 @@ class NavBar extends StatelessWidget {
             leading: const Icon(Icons.person),
             title: Text('Profile', style: listtiletextstyle,),
             onTap: () {
-                    nav.navigateToPage(context, Profile());
+                nav.navigateToPage(context, ProfilePage());
                   }),
           const Divider(
             indent: 0,
             endIndent: 0,
             thickness: 2,
-          ),
-          ListTile(
-            title: Text('Log In', style: listtiletextstyle,),
-            leading: const Icon(Icons.login),
-            onTap: () {
-
-            },
           ),
           ListTile(
             title: Text('Log Out', style: listtiletextstyle,),

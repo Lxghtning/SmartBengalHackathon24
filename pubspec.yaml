@@ -49,6 +49,7 @@ dependencies:
   jiffy: ^6.3.0
   http: ^1.2.1
   image_picker: ^1.0.8
+  firebase_storage: ^11.7.1
 
 
 

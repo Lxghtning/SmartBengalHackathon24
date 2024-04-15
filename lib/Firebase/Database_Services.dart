@@ -1,5 +1,8 @@
-
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 
 
@@ -173,5 +176,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
       }
     });
     return userData;
+  }
+  Future<void> uploadImage(File file, String uid) async {
+    try {
+      Reference ref = FirebaseStorage.instance.ref().child('profile_images/$uid');
+      UploadTask uploadTask = ref.putFile(file);
+      await uploadTask.whenComplete(() => null);
+      String downloadUrl = await ref.getDownloadURL();
+      await users.doc(uid).update({'photoURL': downloadUrl});
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:sbh24/Forum/forum.dart';
 import 'package:sbh24/Profile/Profile.dart';
+import 'package:sbh24/Startup%20Screens/1.dart';
 import 'package:sbh24/Startup%20Screens/Grid.dart';
 import 'package:sbh24/main.dart';
 import 'package:sbh24/Components/Navigators.dart';
@@ -97,7 +98,7 @@ class NavBar extends StatelessWidget {
             leading: const Icon(Icons.question_answer),
             title: Text('Forum', style: listtiletextstyle,),
             onTap: () => {
-              // nav.navigateToPage(context, Forum())
+              nav.navigateToPage(context, Forum())
             },
           ),
           ListTile(
@@ -124,7 +125,7 @@ class NavBar extends StatelessWidget {
             onTap: () async{
               await msgdb.updateState(FirebaseAuth.instance.currentUser?.uid, "Offline");
               navigatorKey.currentState!.popUntil((route) => route.isFirst);
-              FirebaseAuth.instance.signOut();
+              await FirebaseAuth.instance.signOut();
             },
           ),
         ],

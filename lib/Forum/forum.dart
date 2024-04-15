@@ -228,7 +228,7 @@ class _DisplayForumRepliesState extends State<_DisplayForumReplies> {
       body: Column(
         children: [
           SizedBox(height: 10),
-          Text("Author: ${widget.author}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text("Author: ${widget.author}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
           SizedBox(height: 20),
           Expanded(
             child: FutureBuilder<void>(

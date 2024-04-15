@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sbh24/Forum/forum.dart';
 import 'package:sbh24/Startup Screens/Grid.dart';
 import 'package:sbh24/Login/VerifyEmail.dart';
 
@@ -20,7 +21,7 @@ class DummySignUp extends StatelessWidget {
                 } else if (snapshot.hasData && FirebaseAuth.instance.currentUser!.isAnonymous == false) {
                 return const VerifyEmailPage();
                 } else {
-                return Grid_Country();
+                return Forum();
                 }
                 }),
                 );

@@ -266,7 +266,7 @@ class Colleges{
   ];
   //Business Management
   List<Map<String, dynamic>> business = [
-      {
+      { 
   "Name": "Harvard University",
   "City": "Cambridge, MA",
   "Country": "United States",

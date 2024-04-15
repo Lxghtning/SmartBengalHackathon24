@@ -26,8 +26,8 @@ class Grid_Country extends StatelessWidget {
           ),
           itemCount: country.length,
           itemBuilder: (BuildContext context, int index) {
-            return TextButton(
-              onPressed: () {
+            return GestureDetector(
+              onTap: () {
                 navigation().navigateToPage(context, Grid_MainSubject());
               },
               child: Column(
@@ -68,19 +68,23 @@ class Grid_MainSubject extends StatelessWidget {
         child: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
+            crossAxisSpacing: 25,
+            mainAxisSpacing: 5,
+              childAspectRatio: 1/1.5,
           ),
           itemCount: Subjects.length,
           itemBuilder: (BuildContext context, int index) {
-            return TextButton(
-              onPressed: () {},
-              child: Column(
-                children: [
-                  Image.asset(Icons[index], height: 110, width: 110,),
-                  Center(child: Text(Subjects[index], style: TextStyle(fontSize: 20, color: Colors.white),)),
+            return SizedBox(
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: GestureDetector(
+                onTap: () {},
+                child: Column(
+                  children: [
+                    Image.asset(Icons[index],fit: BoxFit.cover,),
+                    Center(child: Text(Subjects[index], style: TextStyle(fontSize: 15, color: Colors.white),)),
 
-                ],
+                  ],
+                ),
               ),
             );
 

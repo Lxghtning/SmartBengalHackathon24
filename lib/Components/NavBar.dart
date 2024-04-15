@@ -95,7 +95,7 @@ class NavBar extends StatelessWidget {
             leading: const Icon(Icons.question_answer),
             title: Text('Forum', style: listtiletextstyle,),
             onTap: () => {
-              nav.navigateToPage(context, Forum())
+              // nav.navigateToPage(context, Forum())
             },
           ),
           ListTile(

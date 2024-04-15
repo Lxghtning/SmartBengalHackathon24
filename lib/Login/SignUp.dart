@@ -6,6 +6,7 @@ import 'package:sbh24/Messages/messageBackend.dart';
 import 'package:sbh24/Components/Navigators.dart';
 import 'package:sbh24/Login/SignIn.dart';
 import 'package:sbh24/Login/dummySignUP.dart';
+import 'package:sbh24/Startup%20Screens/Grid.dart';
 import '/Firebase/Auth_Services.dart';
 import '/help_func.dart';
 import '/Firebase/Database_Services.dart';
@@ -59,8 +60,8 @@ class _SignUpState extends State<SignUp> {
               child: Column(
                 children: [
                   SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-                  Image.asset("assets/const.png"),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                  Image.asset("assets/const.png", height: 125.0, width: 125.0,),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   const Text('Sign Up', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
                   const SizedBox(height: 35.0),
           
@@ -218,57 +219,17 @@ class _SignUpState extends State<SignUp> {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(fixedSize: const Size(400, 50)),
                     onPressed: ()async{
-                    bool isEmailExisting = await Database_Services().isEmailExisting(email);
-                    try{
-                      if(email == ''){
-                        setState(() {
-                          error = 'Email is required';
-                        });
+                      try{
+                        await Authentication_Services().Register(email, password, displayName, yearOfGrad, isStudent);
+                        navigation().navigateToPage(context, Grid_Country());
                       }
-                      else if(isEmailExisting){
+                      catch(e){
                         setState(() {
-                          error = 'Email already exists';
+                          error = e.toString();
                         });
+
+
                       }
-                      else if(password == ''){
-                        setState(() {
-                          error = 'Password is required';
-                        });
-                      } else if(displayName == ''){
-                        setState(() {
-                          error = 'Display Name is required';
-                        });
-                      } else if(_passwordController.text.length < 6){
-                        setState(() {
-                          error = 'Password must be at least 6 characters';
-                        });
-                      } else if(containsSpace(password)){
-                        setState(() {
-                          error = 'Password cannot contain spaces';
-                        });
-                      } else {
-                          await Authentication_Services().Register(email, password, displayName, yearOfGrad, isStudent);
-
-                          //Messages
-                          await msgdb.addUser(displayName,
-                              FirebaseAuth.instance.currentUser?.email,
-                              FirebaseAuth.instance.currentUser?.uid,
-                              "Online");
-
-                          //Forum
-                          await fdb.addUser(displayName,
-                          FirebaseAuth.instance.currentUser?.uid);
-
-                          Navigator.pushReplacementNamed(context, '/');
-                          navigation().navigateToPage(context, const DummySignUp());
-                      }
-                    } catch (e) {
-                      setState(() {
-                        error = 'User already exists';
-                      });
-          
-                    }
-          
                   },
                   child: const Text('Sign Up', style: TextStyle(fontSize: 15.0),),
           

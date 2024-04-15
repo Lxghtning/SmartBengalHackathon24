@@ -46,7 +46,7 @@ class _SignInALUMNIState extends State<SignInALUMNI> {
                 child: Container(
                   child: Column(
                     children: [
-                      const Image(image: AssetImage('assets/const_logo.png'), height: 100.0, width: 100.0,),
+                      const Image(image: AssetImage('assets/const_logo.png'), height: 125.0, width: 125.0,),
 
                       const Text('Sign In', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
                       const SizedBox(height: 10.0),

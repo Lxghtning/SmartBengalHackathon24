@@ -265,6 +265,20 @@ class messageDB {
     return state;
   }
 
+  Future<String> fetchphotoURLFromUID(name) async{
+    String photoURL="";
+    String uid = await fetchUIDFromName(name);
+    DocumentReference<Map<String, dynamic>> documentRef = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(uid);
+
+    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef.get();
+
+    photoURL = documentSnapshot.data()!['photoURL'];
+    return photoURL;
+  }
+
   Future<void> updateState(uid, status) async{
     DocumentReference<Map<String, dynamic>> documentRef = await FirebaseFirestore
         .instance

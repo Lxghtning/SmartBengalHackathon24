@@ -59,7 +59,6 @@ class _MessagesState extends State<Messages> {
   }
 
   Widget _delegate(BuildContext context, int index) {
-    print("messengers $latestMessages");
     final currentDate = DateTime.now();
     return _MessageTitle(messageData: MessageData(
       senderName: messengers[index],

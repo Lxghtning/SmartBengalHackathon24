@@ -19,7 +19,7 @@ import 'package:image_picker/image_picker.dart';
         'email': email,
         'displayName': displayName,
         'yearOfGrad': yearOfGrad,
-        'photoURL': '',
+        'photoURL': 'https://t4.ftcdn.net/jpg/00/65/77/27/360_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg',
         'uid': uid,
     });
   }
@@ -29,7 +29,7 @@ import 'package:image_picker/image_picker.dart';
        'email': email,
        'displayName': displayName,
        'yearsOfExperience': yearsOfExperience,
-       'photoURL': '',
+       'photoURL': 'https://t4.ftcdn.net/jpg/00/65/77/27/360_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg',
        'reviewAuthors':[],
        'reviewComments': [],
        'collegeName': collegeName,

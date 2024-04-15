@@ -268,13 +268,14 @@ class messageDB {
   Future<String> fetchphotoURLFromUID(name) async{
     String photoURL="";
     String uid = await fetchUIDFromName(name);
+    print(uid);
     DocumentReference<Map<String, dynamic>> documentRef = await FirebaseFirestore
         .instance
-        .collection('users')
+        .collection('ALUMNI')
         .doc(uid);
 
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef.get();
-
+    print(documentSnapshot.data());
     photoURL = documentSnapshot.data()!['photoURL'];
     return photoURL;
   }

@@ -104,7 +104,7 @@ class CollegeBuddyProfileDisplay extends StatefulWidget {
 class _CollegeBuddyProfileDisplayState
     extends State<CollegeBuddyProfileDisplay> {
 
-  double ratingShow = 0;
+  int ratingShow = 0;
 
   String collegeName = "";
   String yearsOfExperience = "";
@@ -121,8 +121,6 @@ class _CollegeBuddyProfileDisplayState
   void initState() {
     super.initState();
     _initDataFuture = initData();
-
-    print(rating);
   }
 
   Future<void> initData() async {
@@ -134,10 +132,11 @@ class _CollegeBuddyProfileDisplayState
 
     List spu = [];
     for(int i=0; i<ra.length;i++){
-      String s = await db.sendStudentPhotoUrl(widget.alumniName);
+      String s = await db.sendStudentPhotoUrl(ra[i]);
       spu.add(s);
     }
 
+    List<double> ratingList = r.map<double>((value) => value.toDouble()).toList();
 
     setState(() {
       reviewAuthors = ra;
@@ -145,11 +144,12 @@ class _CollegeBuddyProfileDisplayState
       collegeName = c;
       yearsOfExperience = yoe;
       studentsPhotoUrl = spu;
-      rating = r;
+      rating = ratingList;
     });
-    print(studentsPhotoUrl);
+
     calculateRating();
   }
+
 
   void calculateRating(){
     double rate = 0;
@@ -158,7 +158,7 @@ class _CollegeBuddyProfileDisplayState
     }
     rate/=rating.length;
     setState(() {
-      ratingShow = rate;
+      ratingShow = rate.round();
     });
   }
 
@@ -360,15 +360,33 @@ class _CollegeBuddyProfileDisplayState
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        reviewComments[index],
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          reviewComments[index],
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                          ),
                         ),
-                      ),
+                        SizedBox(height: 8.0),
+                        RatingBar.builder(
+                          initialRating: rating[index] ?? 0, // Set initial rating
+                          minRating: 0,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          onRatingUpdate: (rating) {
+                            // You can handle rating update if needed
+                          },
+                        ),
+                      ],
                     ),
                     leading: CircleAvatar(
                       child: ClipOval(
@@ -385,10 +403,6 @@ class _CollegeBuddyProfileDisplayState
                         ),
                       ),
                     ),
-
-                    // onTap: () {
-                    //
-                    // },
                   ),
                 );
               },

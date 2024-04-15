@@ -11,8 +11,8 @@ class CollegeBuddyDisplay extends StatefulWidget {
 
 class _CollegeBuddyDisplayState extends State<CollegeBuddyDisplay> {
   List<Map<String, String>> colleges = [
-    {"name": "Harvard", "region": "Cambridge, MA"},
-    {"name": "MIT", "region": "Cambridge, MA"},
+    {"name": "Yash", "region": "Cambridge, MA"},
+    {"name": "Jagrit", "region": "Cambridge, MA"},
     // Add more colleges as needed
   ];
 

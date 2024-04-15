@@ -1,5 +1,4 @@
  import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:sbh24/Components/Navigators.dart';
 import 'package:sbh24/Const/collegeDisplay.dart';
 

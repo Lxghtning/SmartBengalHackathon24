@@ -1,4 +1,5 @@
 import 'package:sbh24/Forum/forum.dart';
+import 'package:sbh24/Startup%20Screens/Grid.dart';
 import 'package:sbh24/main.dart';
 import 'package:sbh24/Components/Navigators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -64,9 +65,9 @@ class NavBar extends StatelessWidget {
             title: const Text('Services'),
             children: [
               ListTile(
-                title: const Text("College Counselling"),
+                title: const Text("Connect with a professional"),
                 onTap: () {
-
+                    nav.navigateToPage(context, Grid_Country());
                 },
               ),
               ListTile(

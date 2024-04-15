@@ -190,6 +190,7 @@ class messageDB {
 
   Future<String> fetchUIDFromName(name) async{
     String uid="";
+    print(name);
     await _firestore.collection('messages')
         .get()
         .then((QuerySnapshot querySnapshot) {

@@ -1,7 +1,97 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:sbh24/Firebase/Database_Services.dart';
+import '../Messages/messageBackend.dart';
+import '../Messages/messages.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+class AddReviewDialog extends StatefulWidget {
+  const AddReviewDialog({Key? key, required this.alumniName}) : super(key: key);
+  final alumniName;
+
+  @override
+  _AddReviewDialogState createState() => _AddReviewDialogState();
+}
+
+class _AddReviewDialogState extends State<AddReviewDialog> {
+  double _rating = 0.0;
+  TextEditingController _commentController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Add a Review'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Rate:'),
+          RatingBar.builder(
+            initialRating: _rating,
+            minRating: 0,
+            direction: Axis.horizontal,
+            allowHalfRating: true,
+            itemCount: 5,
+            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+            itemBuilder: (context, _) => Icon(
+              Icons.star,
+              color: Colors.amber,
+            ),
+            onRatingUpdate: (rating) {
+              setState(() {
+                _rating = rating;
+              });
+            },
+          ),
+          SizedBox(height: 20),
+          TextField(
+            controller: _commentController,
+            decoration: InputDecoration(
+              labelText: 'Comment',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.push(
+                context,
+                PageTransition(
+                child: CollegeBuddyProfileDisplay(alumniName : widget.alumniName),
+            type: PageTransitionType.fade,
+            duration: const Duration(milliseconds: 10),
+            ));
+          },
+          child: Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () async{
+            // Save the review comment and rating
+            String comment = _commentController.text;
+            double rating = _rating;
+            await Database_Services().postReview(widget.alumniName, FirebaseAuth.instance.currentUser!.uid, comment, rating);
+
+            Navigator.of(context).pop();
+            Navigator.push(
+                context,
+                PageTransition(
+                  child: CollegeBuddyProfileDisplay(alumniName : widget.alumniName),
+                  type: PageTransitionType.fade,
+                  duration: const Duration(milliseconds: 10),
+                ));
+          },
+          child: Text('Submit'),
+        ),
+      ],
+    );
+  }
+}
 class CollegeBuddyProfileDisplay extends StatefulWidget {
   const CollegeBuddyProfileDisplay({Key? key, required this.alumniName}) : super(key: key);
   final alumniName;
@@ -13,18 +103,26 @@ class CollegeBuddyProfileDisplay extends StatefulWidget {
 
 class _CollegeBuddyProfileDisplayState
     extends State<CollegeBuddyProfileDisplay> {
-  List reviewAuthors = [];
-  List reviewComments = [];
+
+  double ratingShow = 0;
+
   String collegeName = "";
   String yearsOfExperience = "";
+
+  List reviewAuthors = [];
+  List reviewComments = [];
   List studentsPhotoUrl = [];
+  List rating = [];
+
   late Future<void> _initDataFuture;
   final db = Database_Services();
-
+  final msgdb = messageDB();
   @override
   void initState() {
     super.initState();
     _initDataFuture = initData();
+
+    print(rating);
   }
 
   Future<void> initData() async {
@@ -32,11 +130,14 @@ class _CollegeBuddyProfileDisplayState
     List rc = await db.sendAlumniReviews(widget.alumniName);
     String c = await db.sendAlumniCollege(widget.alumniName);
     String yoe = await db.sendAlumniYOE(widget.alumniName);
+    List r = await db.sendAlumniRating(widget.alumniName);
+
     List spu = [];
     for(int i=0; i<ra.length;i++){
       String s = await db.sendStudentPhotoUrl(widget.alumniName);
       spu.add(s);
     }
+
 
     setState(() {
       reviewAuthors = ra;
@@ -44,9 +145,22 @@ class _CollegeBuddyProfileDisplayState
       collegeName = c;
       yearsOfExperience = yoe;
       studentsPhotoUrl = spu;
+      rating = r;
     });
+    print(studentsPhotoUrl);
+    calculateRating();
   }
 
+  void calculateRating(){
+    double rate = 0;
+    for(int i=0; i<rating.length;i++) {
+      rate += rating[i];
+    }
+    rate/=rating.length;
+    setState(() {
+      ratingShow = rate;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +241,7 @@ class _CollegeBuddyProfileDisplayState
                 ),
                 SizedBox(width: 5),
                 Text(
-                  '4.5',
+                  ratingShow.toString(),
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.white,
@@ -171,7 +285,16 @@ class _CollegeBuddyProfileDisplayState
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      msgdb.addReceptor(widget.alumniName, FirebaseAuth.instance.currentUser?.uid);
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                            child:  Messages(),
+                            type: PageTransitionType.fade,
+                            duration: const Duration(milliseconds: 1),
+                          ));
+                    },
                     child: Text('Message', style: TextStyle(color: Colors.black)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.amber,
@@ -186,7 +309,15 @@ class _CollegeBuddyProfileDisplayState
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // Show the add review dialog
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AddReviewDialog(alumniName: widget.alumniName);
+                        },
+                      );
+                    },
                     child: Text('Add a review', style: TextStyle(color: Colors.black)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.amber,
@@ -255,9 +386,9 @@ class _CollegeBuddyProfileDisplayState
                       ),
                     ),
 
-                    onTap: () {
-
-                    },
+                    // onTap: () {
+                    //
+                    // },
                   ),
                 );
               },

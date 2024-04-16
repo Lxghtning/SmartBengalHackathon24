@@ -232,35 +232,30 @@ import 'package:image_picker/image_picker.dart';
     return uid;
   }
 
-  Future <bool> isEmailExisting(String email) async {
-    await users.get().then((QuerySnapshot querySnapshot){
-      for(var doc in querySnapshot.docs){
-        print(doc['email']);
-        if(doc['email'] == email){
-          return true;
-        }
+  Future<bool> isEmailExisting(String email) async {
+    try {
+      var result = await FirebaseFirestore.instance
+          .collection('users') // Assuming 'users' is your collection
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+
+      if (result.docs.isEmpty) {
+        // No document found with the specified email
+        return false;
       }
 
-    });
-    await ALUMNI.get().then((QuerySnapshot querySnapshot){
-      for(var doc in querySnapshot.docs){
-        print(doc['email']);
-        if(doc['email'] == email){
-          return true;
-        }
+      // Check if the document actually has the 'email' field
+      if (result.docs.first.exists &&
+          result.docs.first.data().containsKey('email')) {
+        return true;
+      } else {
+        return false;
       }
-
-    });
-    await Counsellors.get().then((QuerySnapshot querySnapshot){
-      for(var doc in querySnapshot.docs){
-        print(doc['email']);
-        if(doc['email'] == email){
-          return true;
-        }
-      }
-
-    });
-  return false;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
   }
 
   Future<Map> userData(String uid) async {

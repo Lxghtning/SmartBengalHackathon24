@@ -60,103 +60,105 @@ class _CollegeDisplayState extends State<CollegeDisplay> {
         //     ),
         // ],
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: widget.country == "" ?FirebaseFirestore.instance.collection("Colleges").doc(
-            "Colleges").collection(widget.subject).orderBy('Rank')
-
-            .snapshots():FirebaseFirestore.instance.collection("Colleges").doc(
-            "Colleges").collection(widget.subject).where("Country", isEqualTo: widget.country).orderBy('Rank')
-
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-
-          if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-            return Column(
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.8,
-                  child: ListView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (BuildContext context, int index)
-                      {
-                        Map<String, dynamic> collegeData =
-                        snapshot.data!.docs[index].data()
-                        as Map<String, dynamic>;
-                        return Padding(
-                          padding: const EdgeInsets.all(2),
-                          child: Card(
-                            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                child: Text(
-                                  collegeData['Name'],
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                backgroundColor: Colors.blue,
+      body: SingleChildScrollView(
+        child: StreamBuilder<QuerySnapshot>(
+          stream: widget.country == "" ?FirebaseFirestore.instance.collection("Colleges").doc(
+              "Colleges").collection(widget.subject).orderBy('Rank')
+        
+              .snapshots():FirebaseFirestore.instance.collection("Colleges").doc(
+              "Colleges").collection(widget.subject).where("Country", isEqualTo: widget.country).orderBy('Rank')
+        
+              .snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Object?>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+        
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+        
+            if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+              return Column(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.8,
+                    child: ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (BuildContext context, int index)
+                        {
+                          Map<String, dynamic> collegeData =
+                          snapshot.data!.docs[index].data()
+                          as Map<String, dynamic>;
+                          return Padding(
+                            padding: const EdgeInsets.all(2),
+                            child: Card(
+                              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              title: Text(
-                                collegeData['Name'],
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                              subtitle: Row(
-                                children: [
-                                  Icon(Icons.location_on, color: Colors.grey, size: 18),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    "Region: ${collegeData['City']}",
-                                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  child: Text(
+                                    collegeData['Name'],
+                                    style: TextStyle(color: Colors.white),
                                   ),
-                                ],
+                                  backgroundColor: Colors.blue,
+                                ),
+                                title: Text(
+                                  collegeData['Name'],
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Row(
+                                  children: [
+                                    Icon(Icons.location_on, color: Colors.grey, size: 18),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      "Region: ${collegeData['City']}",
+                                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                                onTap: () {
+                                  navigation().navigateToPage(context, CollegeBuddyDisplay(college: collegeData['Name'], subject: widget.subject, country: widget.country,));
+                                },
                               ),
-                              onTap: () {
-                                navigation().navigateToPage(context, CollegeBuddyDisplay(college: collegeData['Name'], subject: widget.subject, country: widget.country,));
-                              },
                             ),
-                          ),
-                        );
-                      }
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      navigation().navigateToPage(context, CollegeBuddyDisplay(college: "", subject: widget.subject, country: widget.country,));
-                    },
-                    child: Text(
-                      "Continue without choosing a college",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                          );
+                        }
                     ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      padding: EdgeInsets.all(16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(16),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        navigation().navigateToPage(context, CollegeBuddyDisplay(college: "", subject: widget.subject, country: widget.country,));
+                      },
+                      child: Text(
+                        "Continue without choosing a college",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: EdgeInsets.all(16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            );
-          }
-          return Center(
-              child: Text(
-                  'No colleges found for ${widget.country
-                      .toUpperCase()}'));
-
-          },
-        ),
+                ],
+              );
+            }
+            return Center(
+                child: Text(
+                    'No colleges found for ${widget.country
+                        .toUpperCase()}'));
+        
+            },
+          ),
+      ),
       );
   }
 }

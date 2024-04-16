@@ -25,13 +25,6 @@ class _SignInState extends State<SignIn> {
   String error = '';
   String resetEmail = '';
 
-  void SignIn() async {
-    try {
-      // await Authentication_Services().signIn(email, _passwordController.text);
-    } catch (e) {
-      print(e.toString());
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

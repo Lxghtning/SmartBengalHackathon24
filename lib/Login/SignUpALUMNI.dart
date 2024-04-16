@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:sbh24/Forum/forumBackend.dart';
+import 'package:sbh24/Login/VerifyEmail.dart';
 import '../Messages/messageBackend.dart';
 import 'package:sbh24/Home/Home.dart';
 import 'package:sbh24/Login/apiVerify.dart';
@@ -28,7 +29,13 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
 
   final messageDB msgdb = new messageDB();
   final forumDatabase fdb = forumDatabase();
-
+  List<String>  Subjects= ['Accounting and Finance', 'Business Studies', 'Chemistry', 'Civil Engineering', 'Computer Science','Dentistry','Economics',
+    'Electrical Engineering', 'Law', 'Mathematics','Mechanical Engineering','Medicine','Physics'];
+  List<String> country =['United States', 'Canada', 'United Kingdom', 'Australia', 'Germany', 'France', 'Netherlands', 'Singapore'];
+  String countryName = '';
+  String subject = '';
+  String about = '';
+  final TextEditingController _aboutController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _collegeController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -99,6 +106,51 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                   displayName = value;
                                 });
                               },),
+                            DropdownButtonFormField(
+
+                              decoration: const InputDecoration(
+                                focusColor: Colors.white,
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+
+                                ),
+
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                labelText: 'Select Country',
+                                labelStyle: TextStyle(color: Colors.white),
+
+                                prefixIcon: Icon(Icons.school_sharp),
+                                prefixIconColor: Colors.white,
+
+                              ),
+                              icon: const Icon(Icons.arrow_drop_down_outlined, color: Colors.white,),
+                              dropdownColor: const Color(0xff1B264F),
+                              style: const TextStyle(color: Colors.white, fontSize: 17.0),
+                              value : countryName,
+
+                              items: country!.map((item){
+                                return DropdownMenuItem(
+
+
+                                    value: item.toString(),
+                                    child: Text(item.toString(), style: const TextStyle(color:Colors.white,
+                                    ),
+                                    )
+                                );
+
+
+
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  countryName = value.toString();
+                                });
+                              },
+                            ),
+
+                            SizedBox(height: 20.0,),
 
                             const SizedBox(height: 20.0),
                             TextField(
@@ -125,8 +177,53 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                               },),
 
                             const SizedBox(height: 20.0),
-              
+
+                            DropdownButtonFormField(
+
+                              decoration: const InputDecoration(
+                                focusColor: Colors.white,
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+
+                                ),
+
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                labelText: 'Select Subject',
+                                labelStyle: TextStyle(color: Colors.white),
+
+                                prefixIcon: Icon(Icons.school_sharp),
+                                prefixIconColor: Colors.white,
+
+                              ),
+                              icon: const Icon(Icons.arrow_drop_down_outlined, color: Colors.white,),
+                              dropdownColor: const Color(0xff1B264F),
+                              style: const TextStyle(color: Colors.white, fontSize: 17.0),
+                              value :subject,
+
+                              items: Subjects!.map((item){
+                                return DropdownMenuItem(
+
+
+                                    value: item.toString(),
+                                    child: Text(item.toString(), style: const TextStyle(color:Colors.white,
+                                    ),
+                                    )
+                                );
+
+
+
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  subject = value.toString();
+                                });
+                              },
+                            ),
+
                             //Email
+
               
                             TextField(
                                 controller: _emailController,
@@ -222,7 +319,29 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                               },),
 
 
+                            TextField(
+                              controller: _aboutController,
+                              keyboardType: TextInputType.text,
+                              style: const TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
+                              decoration: const InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
 
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+
+                                ),
+                                labelText: 'About Yourself', labelStyle: TextStyle(color: Colors.white),
+                                prefixIcon: Icon(Icons.person, color: Colors.white,),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  about = value;
+                                });
+                              },
+                            ),
 
                             const SizedBox(height: 50.0),
                             Align(
@@ -263,7 +382,7 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                   });
                                 } else if(error == ''){
 
-                                  await Authentication_Services().RegisterAlumni(collegeName, email, password, displayName, yearsOfExperience.toString());
+                                  await Authentication_Services().RegisterAlumni(collegeName, email, password, displayName, yearsOfExperience.toString(), countryName, subject, about);
 
                                   //Messages
                                   await msgdb.addUser(displayName,
@@ -274,7 +393,7 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                   //Forum
                                   await fdb.addUser(displayName,
                                       FirebaseAuth.instance.currentUser?.uid);
-                                  navigation().navigateToPage(context, const Forum());
+                                  navigation().navigateToPage(context, VerifyEmailPage());
 
                                 }
                               } catch (e) {
@@ -313,4 +432,72 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
               ),
             )
         ));}
+}
+
+class MoreDetails extends StatefulWidget {
+  String uid ='';
+  MoreDetails({super.key, required this.uid});
+
+  @override
+  State<MoreDetails> createState() => _MoreDetailsState(uid);
+}
+
+class _MoreDetailsState extends State<MoreDetails> {
+  List<String>  Subjects= ['Accounting and Finance', 'Business Studies', 'Chemistry', 'Civil Engineering', 'Computer Science','Dentistry','Economics',
+    'Electrical Engineering', 'Law', 'Mathematics','Mechanical Engineering','Medicine','Physics'];
+  List<String> country =['United States', 'Canada', 'United Kingdom', 'Australia', 'Germany', 'France', 'Netherlands', 'Singapore'];
+  String countryName = '';
+  String subject = '';
+
+  String uid ='';
+  String about = '';
+  _MoreDetailsState(String uid)
+  {
+    this.uid = uid;
+  }
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+
+        home: Scaffold(
+        backgroundColor: const Color(0xff1B264F),
+        body: SingleChildScrollView(
+        child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 65.0, horizontal: 50.0),
+        child: Container(
+        child: Column(
+        children: [
+        const Image(image: AssetImage('assets/const_logo.png'), height: 125.0, width: 125.0,),
+        const Text('Sign Up', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
+        const SizedBox(height: 10.0),
+        const Text('Please provide us More details', style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
+        const SizedBox(height: 20.0),
+
+
+
+          SizedBox(height: 20.0 ,),
+
+          ElevatedButton(onPressed: ()async{
+            await Database_Services().updateMoreDetails_ALUMNI(uid, countryName, subject, about);
+            navigation().navigateToPage(context, const Home());
+          },
+            child: const Text('Subject', style: TextStyle(fontSize: 15.0),),
+
+          ),
+
+
+
+
+
+
+    ]
+    ),
+    )
+    ),
+    )
+    )
+    );
+
+    //Display Name
+  }
 }

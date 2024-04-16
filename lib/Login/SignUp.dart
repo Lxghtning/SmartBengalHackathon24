@@ -219,35 +219,35 @@ class _SignUpState extends State<SignUp> {
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(fixedSize: const Size(400, 50)),
                                 onPressed: ()async{
-                                  bool isEmailExisting = await Database_Services().isEmailExisting(email);
+                                  // bool isEmailExisting = await Database_Services().isEmailExisting(email);
                                   try{
-                                    if(email == ''){
-                                      setState(() {
-                                        error = 'Email is required';
-                                      });
-                                    }
-                                    else if(isEmailExisting){
-                                      setState(() {
-                                        error = 'Email already exists';
-                                      });
-                                    }
-                                    else if(password == ''){
-                                      setState(() {
-                                        error = 'Password is required';
-                                      });
-                                    } else if(displayName == ''){
-                                      setState(() {
-                                        error = 'Display Name is required';
-                                      });
-                                    } else if(_passwordController.text.length < 6){
-                                      setState(() {
-                                        error = 'Password must be at least 6 characters';
-                                      });
-                                    } else if(containsSpace(password)){
-                                      setState(() {
-                                        error = 'Password cannot contain spaces';
-                                      });
-                                    } else {
+                                    // if(email == ''){
+                                    //   setState(() {
+                                    //     error = 'Email is required';
+                                    //   });
+                                    // }
+                                    // else if(isEmailExisting){
+                                    //   setState(() {
+                                    //     error = 'Email already exists';
+                                    //   });
+                                    // }
+                                    // else if(password == ''){
+                                    //   setState(() {
+                                    //     error = 'Password is required';
+                                    //   });
+                                    // } else if(displayName == ''){
+                                    //   setState(() {
+                                    //     error = 'Display Name is required';
+                                    //   });
+                                    // } else if(_passwordController.text.length < 6){
+                                    //   setState(() {
+                                    //     error = 'Password must be at least 6 characters';
+                                    //   });
+                                    // } else if(containsSpace(password)){
+                                    //   setState(() {
+                                    //     error = 'Password cannot contain spaces';
+                                    //   });
+                                    // } else {
                                       await Authentication_Services().RegisterStudent(email, password, displayName, yearOfGrad, isStudent);
 
                                       //Messages
@@ -261,7 +261,7 @@ class _SignUpState extends State<SignUp> {
                                           FirebaseAuth.instance.currentUser?.uid);
 
                                       navigation().navigateToPage(context, const VerifyEmailPage());
-                                    }
+                                    // }
                                   } catch (e) {
                                     setState(() {
                                       error = 'User already exists';

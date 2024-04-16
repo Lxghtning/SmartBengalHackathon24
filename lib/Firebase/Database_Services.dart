@@ -23,7 +23,7 @@ import 'package:image_picker/image_picker.dart';
         'uid': uid,
     });
   }
-   Future updateALUMNIData_Profile(String collegeName, String uid, String email, String displayName, String yearsOfExperience) async {
+   Future updateALUMNIData_Profile(String collegeName, String uid, String email, String displayName, String yearsOfExperience, String country, String subject, String about) async {
      //TODO: Add isStudent field to the database
      return await ALUMNI.doc(uid).set({
        'email': email,
@@ -35,6 +35,9 @@ import 'package:image_picker/image_picker.dart';
        'collegeName': collegeName,
        'uid': uid,
        'rating': [],
+       'Country': country,
+        'Subject': subject,
+        'About': about
      });
    }
   Future updateCounsellorData_Profile(String countryName, String uid, String email, String displayName, String yearsOfExperience) async {
@@ -49,6 +52,14 @@ import 'package:image_picker/image_picker.dart';
       'countryName': countryName,
       'uid': uid,
       'rating': [],
+    });
+  }
+
+  Future<void> updateMoreDetails_ALUMNI(String uid, String country, String subject,String about) async {
+    await ALUMNI.doc(uid).update({
+      'Country': country,
+      'Subject': subject,
+      'About': about
     });
   }
 

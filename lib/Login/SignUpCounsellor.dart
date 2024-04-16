@@ -262,7 +262,7 @@ class _SignUpCounsellorState extends State<SignUpCounsellor> {
                                   });
                                 } else if(error == ''){
 
-                                  await Authentication_Services().RegisterAlumni(countryName, email, password, displayName, yearsOfExperience.toString());
+                                  await Authentication_Services().RegisterCounsellor(countryName, email, password, displayName, yearsOfExperience.toString());
 
                                   //Messages
                                   await msgdb.addUser(displayName,

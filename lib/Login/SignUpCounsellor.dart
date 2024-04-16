@@ -120,19 +120,10 @@ class _SignUpCounsellorState extends State<SignUpCounsellor> {
                                 ),
 
                                 onChanged: (value) {
-                                  bool isValid = EmailValidator.validate(value);
-                                  if (isValid) {
-                                    setState(() {
-                                      email = value;
-                                      error = '';
-                                    });
-                                  } else {
-                                    setState(() {
-                                      email = value;
-                                      error = 'Email is invalid';
-                                    }
-                                    );
-                                  }
+                                  setState(() {
+                                    email = value;
+                                    error = '';
+                                  });
                                 }
                             ),
 

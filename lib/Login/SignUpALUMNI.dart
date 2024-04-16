@@ -24,7 +24,7 @@ class SignUpALUMNI extends StatefulWidget {
 
 
 class _SignUpALUMNIState extends State<SignUpALUMNI> {
-  @override
+
   final navigation nav = navigation();
 
   final messageDB msgdb = new messageDB();
@@ -106,6 +106,7 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                   displayName = value;
                                 });
                               },),
+                            const SizedBox(height: 20.0),
                             DropdownButtonFormField(
 
                               decoration: const InputDecoration(
@@ -128,9 +129,9 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                               icon: const Icon(Icons.arrow_drop_down_outlined, color: Colors.white,),
                               dropdownColor: const Color(0xff1B264F),
                               style: const TextStyle(color: Colors.white, fontSize: 17.0),
-                              value : countryName,
+                              value : country[0],
 
-                              items: country!.map((item){
+                              items: country.map((item){
                                 return DropdownMenuItem(
 
 
@@ -150,7 +151,7 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                               },
                             ),
 
-                            SizedBox(height: 20.0,),
+
 
                             const SizedBox(height: 20.0),
                             TextField(
@@ -200,9 +201,9 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                               icon: const Icon(Icons.arrow_drop_down_outlined, color: Colors.white,),
                               dropdownColor: const Color(0xff1B264F),
                               style: const TextStyle(color: Colors.white, fontSize: 17.0),
-                              value :subject,
+                              value :Subjects[0],
 
-                              items: Subjects!.map((item){
+                              items: Subjects.map((item){
                                 return DropdownMenuItem(
 
 
@@ -223,7 +224,7 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                             ),
 
                             //Email
-
+                            const SizedBox(height: 20.0),
               
                             TextField(
                                 controller: _emailController,
@@ -318,13 +319,14 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                 });
                               },),
 
-
+                            const SizedBox(height: 20.0),
                             TextField(
                               controller: _aboutController,
                               keyboardType: TextInputType.text,
                               style: const TextStyle(color: Colors.white),
                               cursorColor: Colors.white,
                               decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.white),
 
@@ -348,7 +350,7 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                               alignment: Alignment.center,
                               child: Text(error, style: const TextStyle(color: Colors.red),),
                             ),
-              
+                            SizedBox(height: 5),
                             ElevatedButton(onPressed: ()async{
                               bool isEmailExisting = await Database_Services().isEmailExisting(email);
                               try{
@@ -434,70 +436,3 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
         ));}
 }
 
-class MoreDetails extends StatefulWidget {
-  String uid ='';
-  MoreDetails({super.key, required this.uid});
-
-  @override
-  State<MoreDetails> createState() => _MoreDetailsState(uid);
-}
-
-class _MoreDetailsState extends State<MoreDetails> {
-  List<String>  Subjects= ['Accounting and Finance', 'Business Studies', 'Chemistry', 'Civil Engineering', 'Computer Science','Dentistry','Economics',
-    'Electrical Engineering', 'Law', 'Mathematics','Mechanical Engineering','Medicine','Physics'];
-  List<String> country =['United States', 'Canada', 'United Kingdom', 'Australia', 'Germany', 'France', 'Netherlands', 'Singapore'];
-  String countryName = '';
-  String subject = '';
-
-  String uid ='';
-  String about = '';
-  _MoreDetailsState(String uid)
-  {
-    this.uid = uid;
-  }
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-
-        home: Scaffold(
-        backgroundColor: const Color(0xff1B264F),
-        body: SingleChildScrollView(
-        child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 65.0, horizontal: 50.0),
-        child: Container(
-        child: Column(
-        children: [
-        const Image(image: AssetImage('assets/const_logo.png'), height: 125.0, width: 125.0,),
-        const Text('Sign Up', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
-        const SizedBox(height: 10.0),
-        const Text('Please provide us More details', style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
-        const SizedBox(height: 20.0),
-
-
-
-          SizedBox(height: 20.0 ,),
-
-          ElevatedButton(onPressed: ()async{
-            await Database_Services().updateMoreDetails_ALUMNI(uid, countryName, subject, about);
-            navigation().navigateToPage(context, const Home());
-          },
-            child: const Text('Subject', style: TextStyle(fontSize: 15.0),),
-
-          ),
-
-
-
-
-
-
-    ]
-    ),
-    )
-    ),
-    )
-    )
-    );
-
-    //Display Name
-  }
-}

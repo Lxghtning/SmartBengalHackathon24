@@ -9,6 +9,8 @@ import 'package:sbh24/Components/utils.dart';
 import 'package:sbh24/Home/home.dart';
 import 'package:sbh24/Startup%20Screens/1.dart';
 
+import '../Forum/forum.dart';
+
 
 //deals with statuis of email verification
 class VerifyEmailPage extends StatefulWidget {
@@ -75,7 +77,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   @override
   //if user is verified, returns home, else stays on verification page
   Widget build(BuildContext context) => isEmailVerified || FirebaseAuth.instance.currentUser!.email.toString() == "guest@srimalcards.in"
-      ?  const Home()
+      ?  const Forum()
       : Scaffold(
       backgroundColor: HexColor("#4169E1"),
       appBar: AppBar(

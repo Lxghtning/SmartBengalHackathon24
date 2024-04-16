@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:sbh24/Components/NavBar.dart';
-
+import '../Components/NavBarAlumni.dart';
 import '../Components/Navigators.dart';
 import 'forumBackend.dart';
+import '/Firebase/Database_Services.dart';
 
 class Forum extends StatefulWidget {
   const Forum({super.key});
@@ -21,11 +23,21 @@ class _ForumState extends State<Forum> {
   bool _isExpanded = false;
   List forumQuestions = [];
   List forumAuthors = [];
+  User user = FirebaseAuth.instance.currentUser!;
+  bool isAlumni = false;
 
   @override
   void initState() {
     super.initState();
     _initDataFuture = initData();
+    checkIfAlumni();
+  }
+
+  Future<void> checkIfAlumni() async {
+    var userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+    setState(() {
+      isAlumni = !userDoc.exists; // If the document doesn't exist, assume it's an alumni
+    });
   }
 
   Future<void> initData() async {
@@ -47,7 +59,7 @@ class _ForumState extends State<Forum> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavBar(),
+      drawer: isAlumni? NavBarAlumni(): NavBar(),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
       ),// Assuming NavBar.dart contains your navigation drawer widget

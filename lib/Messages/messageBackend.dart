@@ -308,9 +308,13 @@ class  messageDB {
 
   Future<void> updateLatestMessage(name, uid) async{
     String currentUserUID = await fetchUIDFromName(name);
-    List currentUserChattingUsers = await sendChattingUsers(uid);
+    List currentUserChattingUsers = await sendChattingUsers(currentUserUID);
     String receiverUserName = await fetchNameFromUID(uid);
-    int index = currentUserChattingUsers.indexOf(name);
+    print(name);
+    print(uid);
+    print(currentUserChattingUsers);
+    int index = currentUserChattingUsers.indexOf(receiverUserName);
+    print(index);
 
     QuerySnapshot<Map<String, dynamic>> querySnapshotReceiver = await FirebaseFirestore
         .instance
@@ -329,7 +333,9 @@ class  messageDB {
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef.get();
 
     if (querySnapshotReceiver.docs.isNotEmpty) {
-      
+
+
+
       List messagesList = querySnapshotReceiver.docs[0].data()['messagesList'];
       List messagesTimestamp = querySnapshotReceiver.docs[0].data()['messagesTimestamp'];
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sbh24/Components/Navigators.dart';
 import 'package:sbh24/Const/collegeDisplay.dart';
 
+import '../Components/NavBar.dart';
+
 int countryIndex = -1;
 int subjectIndex = -1;
 
@@ -17,6 +19,7 @@ class Grid_Country extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavBar(),
       backgroundColor: Color(0xff1B264F),
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),

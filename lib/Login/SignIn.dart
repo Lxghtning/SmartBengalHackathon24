@@ -133,41 +133,39 @@ class _SignInState extends State<SignIn> {
                       ElevatedButton(
                         child: const Text('Sign In', style: TextStyle(fontSize: 15.0),),
 
-                        onPressed:()async {
-                          bool isEmailExisting = await database_services.isEmailExisting(email);
-                          print (isEmailExisting);
-                          try {
-                            if (email == '') {
-                              setState(() {
-                                error = 'Email is required';
-                              });
-                            } else if (password == '') {
-                              setState(() {
-                                error = 'Password is required';
-                              });
-                            }
-                            else {
+                          onPressed: () async {
+                            try {
+                              if (email.isEmpty) {
+                                setState(() {
+                                  error = 'Email is required';
+                                });
+                                return;
+                              }
+
+                              if (password.isEmpty) {
+                                setState(() {
+                                  error = 'Password is required';
+                                });
+                                return;
+                              }
+
+                              bool isEmailExisting = await database_services.isEmailExisting(email);
+                              if (!isEmailExisting) {
+                                setState(() {
+                                  error = 'User not found. Try registering!';
+                                });
+                                return;
+                              }
+
                               await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
                               nav.navigateToPage(context, const Home());
-                            }
-                            }
-
-
-                          catch (e) {
-                            if (isEmailExisting) {
+                            } catch (e) {
                               setState(() {
-                                print('Email already exists');
-                                error = 'Password is incorrect';
+                                error = e.toString();
                               });
-                            } else {
-                              setState(() {
-                                print(e.toString());
-                                error = 'User not found. Try registering!';
-                              }
-                              );
                             }
                           }
-                        }
+
 
 
                       ),

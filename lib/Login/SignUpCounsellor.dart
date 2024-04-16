@@ -1,44 +1,41 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart';
+import 'package:sbh24/Forum/forum.dart';
 import 'package:sbh24/Forum/forumBackend.dart';
-import '../Messages/messageBackend.dart';
-import 'package:sbh24/Home/Home.dart';
-import 'package:sbh24/Login/apiVerify.dart';
+import 'package:sbh24/Login/VerifyEmail.dart';
+import 'package:sbh24/Messages/messageBackend.dart';
+import 'package:sbh24/Components/Navigators.dart';
+import 'package:sbh24/Login/SignIn.dart';
 import '/Firebase/Auth_Services.dart';
 import '/help_func.dart';
 import '/Firebase/Database_Services.dart';
-import 'package:sbh24/Components/Navigators.dart';
 import 'SignInCounsellor.dart';
-import 'package:sbh24/Forum/forum.dart';
 
 class SignUpCounsellor extends StatefulWidget {
   const SignUpCounsellor({super.key});
-
-
 
   @override
   State<SignUpCounsellor> createState() => _SignUpCounsellorState();
 }
 
-
 class _SignUpCounsellorState extends State<SignUpCounsellor> {
-  @override
-  final navigation nav = navigation();
 
-  final messageDB msgdb = new messageDB();
+  final messageDB msgdb = messageDB();
   final forumDatabase fdb = forumDatabase();
 
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _countryController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _displayNameController = TextEditingController();
-  final TextEditingController _yearsOfExperienceController = TextEditingController();
+  final TextEditingController _countryNameController = TextEditingController();
+  final TextEditingController _yearsController = TextEditingController();
+  int yearsOfXp = 0;
   String displayName = '';
   String countryName = '';
-  bool isStudent = false;
+  bool isStudent = true;
   String email = '';
   String password = '';
-  int yearsOfExperience = 0;
+  String yearOfGrad = DateTime.now().year.toString();
   bool passview_off = true;
   String error = '';
 
@@ -63,16 +60,15 @@ class _SignUpCounsellorState extends State<SignUpCounsellor> {
 
             body: SingleChildScrollView(
               child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 65.0, horizontal: 50.0),
+                  padding: const EdgeInsets.all(70.0),
                   child: Container(
                       child: Column(
                           children: [
-                            const Image(image: AssetImage('assets/const_logo.png'), height: 125.0, width: 125.0,),
-                            const Text('Sign Up', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
-                            const SizedBox(height: 10.0),
-                            const Text('College Buddy', style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
-                            const SizedBox(height: 20.0),
-
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+                            Image.asset("assets/const.png"),
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                            Text('Sign Up', style: TextStyle(fontSize: 35.0,fontWeight: FontWeight.w900,color: Colors.white, ),),
+                            SizedBox(height: 35.0),
 
                             //Display Name
 
@@ -99,31 +95,9 @@ class _SignUpCounsellorState extends State<SignUpCounsellor> {
                                 });
                               },),
 
-                            const SizedBox(height: 20.0),
-                            TextField(
-                              controller: _countryController,
-                              keyboardType: TextInputType.text,
-                              style: const TextStyle(color: Colors.white),
-                              cursorColor: Colors.white,
-                              decoration: const InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
 
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
 
-                                ),
-                                labelText: 'Enter your country of residence', labelStyle: TextStyle(color: Colors.white),
-                                prefixIcon: Icon(Icons.person, color: Colors.white,),
-                              ),
-                              onChanged: (value) {
-                                setState(() {
-                                  countryName = value;
-                                });
-                              },),
-
-                            const SizedBox(height: 20.0),
+                            SizedBox(height: 20.0),
 
                             //Email
 
@@ -141,30 +115,28 @@ class _SignUpCounsellorState extends State<SignUpCounsellor> {
                                     borderSide: BorderSide(color: Colors.white),
 
                                   ),
-                                  labelText: 'Enter your college email', labelStyle: TextStyle(color: Colors.white),
+                                  labelText: 'Enter your email', labelStyle: TextStyle(color: Colors.white),
                                   prefixIcon: Icon(Icons.email, color: Colors.white,),
                                 ),
 
-                                onChanged: (value) async{
-                                  bool isOfficial = await verify(value, countryName);
-                                  if (isOfficial){
+                                onChanged: (value) {
+                                  bool isValid = EmailValidator.validate(value);
+                                  if (isValid) {
                                     setState(() {
                                       email = value;
                                       error = '';
                                     });
                                   } else {
                                     setState(() {
-                                      // print('in else');
                                       email = value;
                                       error = 'Email is invalid';
                                     }
-
                                     );
                                   }
                                 }
                             ),
 
-                            const SizedBox(height: 20.0),
+                            SizedBox(height: 20.0),
                             TextField(
                               controller: _passwordController,
                               style: const TextStyle(color: Colors.white),
@@ -196,9 +168,9 @@ class _SignUpCounsellorState extends State<SignUpCounsellor> {
                                 });
                               },),
 
-                            const SizedBox(height: 20.0),
+                            SizedBox(height: 20.0),
                             TextField(
-                              controller: _yearsOfExperienceController,
+                              controller: _yearsController,
                               keyboardType: TextInputType.number,
                               style: const TextStyle(color: Colors.white),
                               cursorColor: Colors.white,
@@ -216,53 +188,92 @@ class _SignUpCounsellorState extends State<SignUpCounsellor> {
                               ),
                               onChanged: (value) {
                                 setState(() {
-                                  yearsOfExperience = int.parse(value);
+                                  yearsOfXp = int.parse(value);
                                 });
                               },),
 
 
 
+                            SizedBox(height: 50.0),
+                            TextField(
+                              controller: _countryNameController,
+                              keyboardType: TextInputType.text,
+                              style: const TextStyle(color: Colors.white),
+                              cursorColor: Colors.white,
+                              decoration: const InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
 
-                            const SizedBox(height: 50.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+
+                                ),
+                                labelText: 'Enter your country', labelStyle: TextStyle(color: Colors.white),
+                                prefixIcon: Icon(Icons.person, color: Colors.white,),
+                              ),
+                              onChanged: (value) {
+                                setState(() {
+                                  countryName = value;
+                                });
+                              },),
                             Align(
                               alignment: Alignment.center,
                               child: Text(error, style: const TextStyle(color: Colors.red),),
                             ),
 
-                            ElevatedButton(onPressed: ()async{
-                              bool isEmailExisting = await Database_Services().isEmailExisting(email);
-                              try{
-                                if(email == ''){
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(fixedSize: const Size(400, 50)),
+                              child: const Text('Sign Up', style: TextStyle(fontSize: 15.0),),
+                              onPressed: ()async{
+                                bool isEmailExisting = await Database_Services().isEmailExisting(email);
+                                try{
+                                  if(email == ''){
+                                    setState(() {
+                                      error = 'Email is required';
+                                    });
+                                  }
+                                  else if(isEmailExisting){
+                                    setState(() {
+                                      error = 'Email already exists';
+                                    });
+                                  }
+                                  else if(password == ''){
+                                    setState(() {
+                                      error = 'Password is required';
+                                    });
+                                  } else if(displayName == ''){
+                                    setState(() {
+                                      error = 'Display Name is required';
+                                    });
+                                  } else if(_passwordController.text.length < 6){
+                                    setState(() {
+                                      error = 'Password must be at least 6 characters';
+                                    });
+                                  } else if(containsSpace(password)){
+                                    setState(() {
+                                      error = 'Password cannot contain spaces';
+                                    });
+                                  } else {
+                                    await Authentication_Services().RegisterCounsellor(countryName,email,password,displayName,yearsOfXp.toString());
+
+                                    //Messages
+                                    await msgdb.addUser(displayName,
+                                        FirebaseAuth.instance.currentUser?.email,
+                                        FirebaseAuth.instance.currentUser?.uid,
+                                        "Online");
+
+                                    //Forum
+                                    await fdb.addUser(displayName,
+                                        FirebaseAuth.instance.currentUser?.uid);
+
+                                    navigation().navigateToPage(context, const VerifyEmailPage());
+                                  }
+                                } catch (e) {
                                   setState(() {
-                                    error = 'Email is required';
+                                    error = 'User already exists';
                                   });
                                 }
-                                else if(isEmailExisting){
-                                  setState(() {
-                                    print('Email already exists');
-                                    error = 'Email already exists';
-                                  });
-                                }
-                                else if(password == ''){
-                                  setState(() {
-                                    error = 'Password is required';
-                                  });
-                                } else if(displayName == ''){
-                                  setState(() {
-                                    error = 'Display Name is required';
-                                  });
-                                } else if(_passwordController.text.length < 6){
-                                  setState(() {
-
-                                    error = 'Password must be at least 6 characters';
-                                  });
-                                } else if(containsSpace(password)){
-                                  setState(() {
-                                    error = 'Password cannot contain spaces';
-                                  });
-                                } else if(error == ''){
-
-                                  await Authentication_Services().RegisterCounsellor(countryName, email, password, displayName, yearsOfExperience.toString());
 
                                   //Messages
                                   await msgdb.addUser(displayName,
@@ -275,18 +286,10 @@ class _SignUpCounsellorState extends State<SignUpCounsellor> {
                                       FirebaseAuth.instance.currentUser?.uid);
                                   navigation().navigateToPage(context, const Forum());
 
-                                }
-                              } catch (e) {
-                                setState(() {
-                                  error = 'User already exists';
-                                });
+                                }),
 
-                              }
 
-                            },
-                              child: const Text('Sign Up', style: TextStyle(fontSize: 15.0),),
 
-                            ),
                             const SizedBox(height: 10.0),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -295,11 +298,10 @@ class _SignUpCounsellorState extends State<SignUpCounsellor> {
                                 const Text('Already have an account?', style: TextStyle(color: Colors.white),),
                                 TextButton(
                                   onPressed: () {
-                                    nav.navigateToPage(context, const SignInCounsellor());
+                                    navigation().navigateToPage(context, const SignInCounsellor());
                                   },
                                   child: const Text('Sign In', style: TextStyle(color: Colors.blue),),
                                 ),
-
                               ],
                             )
 
@@ -311,5 +313,7 @@ class _SignUpCounsellorState extends State<SignUpCounsellor> {
                   )
               ),
             )
-        ));}
+        )
+    );
+  }
 }

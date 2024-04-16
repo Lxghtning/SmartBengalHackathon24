@@ -85,6 +85,7 @@ import 'package:image_picker/image_picker.dart';
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef
         .get();
 
+    if(documentSnapshot.exists) {
       final ratingList = documentSnapshot.data()!['rating'];
       ratingList.add(rating);
       final reviewAuthor = documentSnapshot.data()!['reviewAuthors'];
@@ -92,17 +93,24 @@ import 'package:image_picker/image_picker.dart';
       reviewComments.add(review);
 
       bool given = false;
-      for(int index=0; index<reviewAuthor.length; index++) {
-        if(reviewAuthor[index]==author) given = true;
+      for (int index = 0; index < reviewAuthor.length; index++) {
+        if (reviewAuthor[index] == author) given = true;
       }
 
-      if(!given) {
+      if (!given) {
         await documentRef.update({
           'reviewComments': reviewComments,
           'reviewAuthors': FieldValue.arrayUnion([author]),
           'rating': ratingList,
         });
       }
+    }else{
+      await documentRef.set({
+        'reviewComments': [review],
+        'reviewAuthors': [author],
+        'rating': [rating],
+      });
+    }
   }
 
   Future<List> sendAlumniRating(String name) async{

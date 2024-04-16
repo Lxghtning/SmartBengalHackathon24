@@ -265,20 +265,21 @@ class messageDB {
     return state;
   }
 
-  Future<String> fetchphotoURLFromUID(name) async{
-    String photoURL="";
-    String uid = await fetchUIDFromName(name);
-    print(uid);
-    DocumentReference<Map<String, dynamic>> documentRef = await FirebaseFirestore
-        .instance
-        .collection('ALUMNI')
-        .doc(uid);
-
-    DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef.get();
-    print(documentSnapshot.data());
-    photoURL = documentSnapshot.data()!['photoURL'];
-    return photoURL;
-  }
+  // Future<String> fetchphotoURLFromUID(name) async{
+  //   String photoURL="";
+  //   String uid = await fetchUIDFromName(name);
+  //   print(name);
+  //   DocumentReference<Map<String, dynamic>> documentRef = await FirebaseFirestore
+  //       .instance
+  //       .collection('ALUMNI')
+  //       .doc(uid);
+  //
+  //   DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef.get();
+  //   print("hello");
+  //   print(documentSnapshot.data());
+  //   photoURL = documentSnapshot.data()!['photoURL'];
+  //   return photoURL;
+  // }
 
   Future<void> updateState(uid, status) async{
     DocumentReference<Map<String, dynamic>> documentRef = await FirebaseFirestore
@@ -328,7 +329,7 @@ class messageDB {
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot = await documentRef.get();
 
     if (querySnapshotReceiver.docs.isNotEmpty) {
-      //Latest document data
+      
       List messagesList = querySnapshotReceiver.docs[0].data()['messagesList'];
       List messagesTimestamp = querySnapshotReceiver.docs[0].data()['messagesTimestamp'];
 

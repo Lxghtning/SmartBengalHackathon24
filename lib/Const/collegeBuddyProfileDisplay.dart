@@ -9,7 +9,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class AddReviewDialog extends StatefulWidget {
   const AddReviewDialog({Key? key, required this.alumniName}) : super(key: key);
-  final alumniName;
+  final Map<String, dynamic> alumniName;
+
 
   @override
   _AddReviewDialogState createState() => _AddReviewDialogState();
@@ -75,7 +76,7 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
             // Save the review comment and rating
             String comment = _commentController.text;
             double rating = _rating;
-            await Database_Services().postReview(widget.alumniName, FirebaseAuth.instance.currentUser!.uid, comment, rating);
+            await Database_Services().postReview(widget.alumniName['displayName'], FirebaseAuth.instance.currentUser!.uid, comment, rating);
 
             Navigator.of(context).pop();
             Navigator.push(
@@ -94,7 +95,7 @@ class _AddReviewDialogState extends State<AddReviewDialog> {
 }
 class CollegeBuddyProfileDisplay extends StatefulWidget {
   const CollegeBuddyProfileDisplay({Key? key, required this.alumniName}) : super(key: key);
-  final alumniName;
+  final Map<String, dynamic> alumniName;
 
   @override
   State<CollegeBuddyProfileDisplay> createState() =>
@@ -106,52 +107,45 @@ class _CollegeBuddyProfileDisplayState
 
   int ratingShow = 0;
 
-  String collegeName = "";
-  String yearsOfExperience = "";
-
-  List reviewAuthors = [];
-  List reviewComments = [];
-  List studentsPhotoUrl = [];
-  List rating = [];
 
   late Future<void> _initDataFuture;
   final db = Database_Services();
   final msgdb = messageDB();
+
   @override
   void initState() {
     super.initState();
-    _initDataFuture = initData();
   }
 
-  Future<void> initData() async {
-    List ra = await db.sendAlumniReviewsAuthor(widget.alumniName);
-    List rc = await db.sendAlumniReviews(widget.alumniName);
-    String c = await db.sendAlumniCollege(widget.alumniName);
-    String yoe = await db.sendAlumniYOE(widget.alumniName);
-    List r = await db.sendAlumniRating(widget.alumniName);
+  // Future<void> initData() async {
+  //   List ra = await db.sendAlumniReviewsAuthor(widget.alumniName);
+  //   List rc = await db.sendAlumniReviews(widget.alumniName);
+  //   String c = await db.sendAlumniCollege(widget.alumniName);
+  //   String yoe = await db.sendAlumniYOE(widget.alumniName);
+  //   List r = await db.sendAlumniRating(widget.alumniName);
+  //
+  //   List spu = [];
+  //   for(int i=0; i<ra.length;i++){
+  //     String s = await db.sendStudentPhotoUrl(ra[i]);
+  //     spu.add(s);
+  //   }
+  //
+  //   List<double> ratingList = r.map<double>((value) => value.toDouble()).toList();
+  //
+  //   setState(() {
+  //     reviewAuthors = ra;
+  //     reviewComments = rc;
+  //     collegeName = c;
+  //     yearsOfExperience = yoe;
+  //     studentsPhotoUrl = spu;
+  //     rating = ratingList;
+  //   });
+  //
+  //   calculateRating();
+  // }
 
-    List spu = [];
-    for(int i=0; i<ra.length;i++){
-      String s = await db.sendStudentPhotoUrl(ra[i]);
-      spu.add(s);
-    }
 
-    List<double> ratingList = r.map<double>((value) => value.toDouble()).toList();
-
-    setState(() {
-      reviewAuthors = ra;
-      reviewComments = rc;
-      collegeName = c;
-      yearsOfExperience = yoe;
-      studentsPhotoUrl = spu;
-      rating = ratingList;
-    });
-
-    calculateRating();
-  }
-
-
-  void calculateRating(){
+  void calculateRating(List rating){
     double rate = 0;
     for(int i=0; i<rating.length;i++) {
       rate += rating[i];
@@ -164,6 +158,15 @@ class _CollegeBuddyProfileDisplayState
 
   @override
   Widget build(BuildContext context) {
+    String collegeName = widget.alumniName['collegeName'].toString();
+    String yearsOfExperience = widget.alumniName['yearsOfExperience'].toString();
+
+    List reviewAuthors = widget.alumniName['reviewAuthors'];
+    List reviewComments = widget.alumniName['reviewComments'];
+    String photoURL = widget.alumniName['photoURL'];
+    List rating = widget.alumniName['rating'];
+    calculateRating(rating);
+
     return Scaffold(
       backgroundColor: HexColor("#1b2a61"),
       appBar: AppBar(
@@ -188,10 +191,11 @@ class _CollegeBuddyProfileDisplayState
             SizedBox(height: 20),
             CircleAvatar(
               radius: 60,
+              backgroundImage: NetworkImage(photoURL),
             ),
             SizedBox(height: 20),
             Text(
-              widget.alumniName,
+              widget.alumniName['displayName'].toString(),
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -286,7 +290,7 @@ class _CollegeBuddyProfileDisplayState
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     onPressed: () {
-                      msgdb.addReceptor(widget.alumniName, FirebaseAuth.instance.currentUser?.uid);
+                      msgdb.addReceptor(widget.alumniName['displayName'], FirebaseAuth.instance.currentUser?.uid);
                       Navigator.push(
                           context,
                           PageTransition(
@@ -372,7 +376,7 @@ class _CollegeBuddyProfileDisplayState
                         ),
                         SizedBox(height: 8.0),
                         RatingBar.builder(
-                          initialRating: rating[index] ?? 0, // Set initial rating
+                          initialRating: (widget.alumniName['rating'][index]).toDouble(), // Set initial rating
                           minRating: 0,
                           direction: Axis.horizontal,
                           allowHalfRating: true,
@@ -390,14 +394,15 @@ class _CollegeBuddyProfileDisplayState
                     ),
                     leading: CircleAvatar(
                       child: ClipOval(
-                        child: studentsPhotoUrl[index] != null && studentsPhotoUrl[index] != ""
-                            ? Image(
-                          image: NetworkImage(studentsPhotoUrl[index]),
-                          height: 100.0,
-                          width: 100.0,
-                          fit: BoxFit.cover,
-                        )
-                            : Icon(
+                        // child: studentsPhotoUrl[index] != null && studentsPhotoUrl[index] != ""
+                        //     ? Image(
+                        //   image: NetworkImage(studentsPhotoUrl[index]),
+                        //   height: 100.0,
+                        //   width: 100.0,
+                        //   fit: BoxFit.cover,
+                        // )
+                        //     :
+                          child: Icon(
                           Icons.person, // Default person icon
                           size: 25, // Adjust size as needed
                         ),

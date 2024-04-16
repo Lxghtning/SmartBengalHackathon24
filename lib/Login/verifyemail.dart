@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:sbh24/Components/myButton.dart';
 import 'package:sbh24/Components/utils.dart';
 import 'package:sbh24/Home/home.dart';
+import 'package:sbh24/Startup%20Screens/1.dart';
 
 
 //deals with statuis of email verification
@@ -60,6 +62,14 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   Future signOut() async {
     FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      PageTransition(
+        child: InitialSetup(),
+        type: PageTransitionType.fade,
+        duration: const Duration(milliseconds: 500),
+      ),
+    );
   }
 
   @override

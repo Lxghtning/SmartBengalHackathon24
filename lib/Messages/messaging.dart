@@ -16,13 +16,12 @@ import 'dart:core';
 import 'messages.dart';
 
 class Messaging extends StatefulWidget {
-  //helper function
+  // Helper function
   static Route route(MessageData data) => MaterialPageRoute(
     builder: (context) => Messaging(
       messageData: data,
     ),
   );
-
 
   const Messaging({
     Key? key,
@@ -31,18 +30,16 @@ class Messaging extends StatefulWidget {
 
   final MessageData messageData;
 
-
-
   @override
   State<Messaging> createState() => _MessagingState();
 }
 
 class _MessagingState extends State<Messaging> {
-
   final navigation nav = navigation();
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: HexColor("#1b2a61"),
       appBar: AppBar(
@@ -53,7 +50,10 @@ class _MessagingState extends State<Messaging> {
         leading: Align(
           alignment: Alignment.centerRight,
           child: IconButton(
-            icon: const Icon(Icons.arrow_back_ios,color: Colors.white,),
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            ),
             onPressed: () {
               nav.navigateToPage(context, Messages());
             },
@@ -67,17 +67,20 @@ class _MessagingState extends State<Messaging> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Center(
               child: IconButton(
-                icon: const Icon(Icons.video_call,color: Colors.white,),
-                onPressed: () {},
+                icon: const Icon(
+                  Icons.video_call,
+                  color: Colors.white,
                 ),
-              )
+                onPressed: () {},
+              ),
             ),
+          ),
           Padding(
-            padding: const EdgeInsets.only(right:20),
+            padding: const EdgeInsets.only(right: 20),
             child: Center(
               child: IconButton(
                 icon: const Icon(
-                    Icons.call,
+                  Icons.call,
                   color: Colors.white,
                 ),
                 onPressed: () {},
@@ -88,9 +91,9 @@ class _MessagingState extends State<Messaging> {
       ),
       body: Column(
         children: [
-          Expanded(child: _MessageList(messageData: widget.messageData,)),
+          Expanded(child: _MessageList(messageData: widget.messageData)),
           _MessagingBar(messageData: widget.messageData)
-        ]
+        ],
       ),
     );
   }
@@ -110,27 +113,33 @@ class _AppBarTitle extends StatefulWidget {
 class _AppBarTitleState extends State<_AppBarTitle> {
   final messageDB msgdb = messageDB();
   String state = "";
+  String? profilePictureUrl="https://t4.ftcdn.net/jpg/00/65/77/27/360_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg";
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    call();
-
+    // call();
   }
 
-  void call() async{
-    String userState = await msgdb.userState(widget.messageData.senderName);
-    setState(() {
-        state=userState;
-    });
-  }
+  // void call() async {
+  //   String userState = await msgdb.userState(widget.messageData.senderName);
+  //   String? url = await widget.messageData.profilePicture;
+  //   setState(() {
+  //     state = userState;
+  //     profilePictureUrl = url;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
+
     return Row(
       children: [
-        Avatar.small(
-          url: widget.messageData.profilePicture,
-        ),
+        profilePictureUrl != null
+            ? Avatar.small(
+          url: profilePictureUrl!,
+        )
+            : SizedBox(), // Placeholder or loading indicator can be used here
         const SizedBox(
           width: 16,
         ),
@@ -142,11 +151,11 @@ class _AppBarTitleState extends State<_AppBarTitle> {
               Text(
                 widget.messageData.senderName,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 16,color: Colors.white),
+                style: const TextStyle(fontSize: 16, color: Colors.white),
               ),
               const SizedBox(height: 2),
               Text(
-               state,
+                state,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
@@ -160,6 +169,7 @@ class _AppBarTitleState extends State<_AppBarTitle> {
     );
   }
 }
+
 
 
 class _MessagingBar extends StatefulWidget {
@@ -478,6 +488,7 @@ class _MessageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Row(

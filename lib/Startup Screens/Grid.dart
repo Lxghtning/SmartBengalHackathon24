@@ -38,7 +38,7 @@ class Grid_Country extends StatelessWidget {
             return TextButton(
               onPressed: () {
                 countryIndex = index;
-                navigation().navigateToPage(context, Grid_MainSubject());
+                navigation().navigateToPage(context, Grid_MainSubject(country: country[countryIndex]));
               },
               child: Column(
                 children: [
@@ -57,6 +57,9 @@ class Grid_Country extends StatelessWidget {
 }
 
 class Grid_MainSubject extends StatelessWidget {
+  final String country;
+  Grid_MainSubject({super.key, required this.country});
+
   List<String>  Subjects= ['Accounting and Finance', 'Business Studies', 'Chemistry', 'Civil Engineering', 'Computer Science','Dentistry','Economics',
     'Electrical Engineering', 'Law', 'Mathematics','Mechanical Engineering','Medicine','Physics'];
   List<String> Icons = ['assets/subjects/accounting.png', 'assets/subjects/business.png', 'assets/subjects/chemistry.png', 'assets/subjects/civil.png', 'assets/subjects/computer.png',
@@ -90,7 +93,7 @@ class Grid_MainSubject extends StatelessWidget {
                     onTap: () {
                       print(Subjects[index]);
                       subjectIndex = index;
-                      navigation().navigateToPage(context, CollegeDisplay());
+                      navigation().navigateToPage(context, CollegeDisplay(subject: Subjects[index], country: country));
                     },
                     child: Column(
                       children: [

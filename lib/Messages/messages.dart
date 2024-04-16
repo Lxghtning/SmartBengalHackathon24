@@ -53,19 +53,21 @@ class _MessagesState extends State<Messages> {
     return data;
   }
 
-  Future<String> fetchphotoURLFromUID(String uid) async{
-    String url = await msgdb.fetchphotoURLFromUID(uid);
+  Future<String> fetchphotoURLFromUID(String name) async{
+    String url = "https://t4.ftcdn.net/jpg/00/65/77/27/360_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg";
     return url;
   }
 
   Widget _delegate(BuildContext context, int index) {
     final currentDate = DateTime.now();
+    print(messengers);
     return _MessageTitle(messageData: MessageData(
       senderName: messengers[index],
       message: messageData(latestMessages, index),
       messageDate: currentDate,
       dateMessage: messageData(latestMessagesTimestamp, index),
-      profilePicture: fetchphotoURLFromUID(messengers[index]).toString(),
+      // profilePicture: fetchphotoURLFromUID(messengers[index]).toString(),
+      profilePicture: Helpers.randomPictureUrl()
     ));
   }
 
@@ -93,118 +95,114 @@ class _MessagesState extends State<Messages> {
 }
 
 class _MessageTitle extends StatelessWidget {
-
-
   _MessageTitle({
     Key? key,
     required this.messageData,
-   }) : super(key: key);
+  }) : super(key: key);
 
   final MessageData messageData;
   final messageDB msgdb = messageDB();
 
+  Future<String> fetchphotoURLFromUID(String name) async{
+    String url = "https://t4.ftcdn.net/jpg/00/65/77/27/360_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg";
+    return url;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async{
-        msgdb.addReceptor(messageData.senderName, FirebaseAuth.instance.currentUser?.uid);
-        Navigator.of(context).push(Messaging.route(messageData));
-      },
-      child: Container(
-        height: 100,
-        margin: const EdgeInsets.symmetric(horizontal: 8),
-        decoration: const BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: Colors.grey,
-              width: 0.2,
-            ),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Row(
-            children: [
-               Padding(
-                 padding: const EdgeInsets.all(10.0),
-                 child: Avatar.medium(url:messageData.profilePicture),
-               ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
+    return FutureBuilder<String>(
+      future: fetchphotoURLFromUID(messageData.senderName),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // While waiting for the future to complete, return a placeholder or loading indicator
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          // If an error occurred, display an error message
+          return Text('Error: ${snapshot.error}');
+        } else {
+          // If the future completed successfully, display the image
+          return InkWell(
+            onTap: () async {
+              msgdb.addReceptor(messageData.senderName, FirebaseAuth.instance.currentUser?.uid);
+              Navigator.of(context).push(Messaging.route(messageData));
+            },
+            child: Container(
+              height: 100,
+              margin: const EdgeInsets.symmetric(horizontal: 8),
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.grey,
+                    width: 0.2,
+                  ),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
                   children: [
-                    Text(
-                      messageData.senderName,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        letterSpacing: 0.2,
-                        wordSpacing: 1.5,
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Avatar.medium(url: snapshot.data!), // Use the snapshot data here
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            messageData.senderName,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              letterSpacing: 0.2,
+                              wordSpacing: 1.5,
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                            child: Text(
+                              messageData.message,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Color(0xFF9899A5),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      height:20,
-                      child:Text(
-                      messageData.message,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Color(0xFF9899A5),
-                        fontSize: 14,
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children:[
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              messageData.dateMessage.toUpperCase(),
+                              style: const TextStyle(
+                                color: Color(0xFF9899A5),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
+                          ]
                       ),
-                    ),
-                    ),
+                    )
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children:[
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    Text(
-                      messageData.dateMessage.toUpperCase(),
-                      style: const TextStyle(
-                        color: Color(0xFF9899A5),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.2,
-                      ),
-                    ),
-                    // const SizedBox(
-                    //   height: 8
-                    // ),
-                    // Container(
-                    //   width: 18,
-                    //   height: 18,
-                    //   decoration: const BoxDecoration(
-                    //     color: Color(0xFF3B76F6),
-                    //     shape: BoxShape.circle,
-                    //   ),
-                    //   child: const Center(
-                    //     child: Text(
-                    //       "1",
-                    //       style: TextStyle(
-                    //         color: Color(0xFFF5F5F5),
-                    //         fontSize: 10,
-                    //         fontWeight: FontWeight.w600,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // )
-                  ]
-                )
-              )
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        }
+      },
     );
   }
 }

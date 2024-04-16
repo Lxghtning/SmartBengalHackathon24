@@ -39,7 +39,7 @@ import 'package:image_picker/image_picker.dart';
    }
   Future updateCounsellorData_Profile(String countryName, String uid, String email, String displayName, String yearsOfExperience) async {
     //TODO: Add isStudent field to the database
-    return await ALUMNI.doc(uid).set({
+    return await Counsellors.doc(uid).set({
       'email': email,
       'displayName': displayName,
       'yearsOfExperience': yearsOfExperience,

@@ -40,7 +40,7 @@ class Authentication_Services {
       await _auth.currentUser!.updateDisplayName(displayName);
       await _auth.currentUser!.updatePhotoURL('https://www.google.com/url?sa=i&url=https%3A%2F%2Fin.pinterest.com%2Fpin%2Faccount-add-admin-avatar-host-person-user-icon-download-on-iconfinder--876090933731408162%2F&psig=AOvVaw0X5O8GKOFqkAqB6FTeXt9l&ust=1712745872558000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIirm-X5tIUDFQAAAAAdAAAAABAK');
       String uid = _auth.currentUser!.uid;
-      await Database_Services().updateALUMNIData_Profile(countryName, uid, email, displayName, years);
+      await Database_Services().updateCounsellorData_Profile(countryName, uid, email, displayName, years);
     } catch (e) {
       print(e.toString());
     }

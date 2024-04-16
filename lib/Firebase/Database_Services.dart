@@ -244,6 +244,19 @@ import 'package:image_picker/image_picker.dart';
     });
     return userData;
   }
+  Future<Map> alumniData(String uid) async {
+    Map<String, dynamic> alumniData = {};
+    await ALUMNI.doc(uid).get().then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        alumniData = documentSnapshot.data() as Map<String, dynamic>;
+        alumniData['uid'] = uid;
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+    return alumniData;
+  }
+
   Future<void> uploadImage(File file, String uid) async {
     try {
       Reference ref = FirebaseStorage.instance.ref().child('profile_images/$uid');

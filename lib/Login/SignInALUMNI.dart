@@ -5,7 +5,7 @@ import 'package:sbh24/Home/Home.dart';
 import '/Firebase/Database_Services.dart';
 import 'package:sbh24/Components/Navigators.dart';
 import 'SignUpALUMNI.dart';
-
+import 'package:sbh24/Forum/forum.dart';
 class SignInALUMNI extends StatefulWidget {
   const SignInALUMNI({super.key});
 
@@ -160,7 +160,7 @@ class _SignInALUMNIState extends State<SignInALUMNI> {
                               }
                               else {
                                 await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-                                nav.navigateToPage(context, const Home());
+                                nav.navigateToPage(context, const Forum());
                               }
                             }
               

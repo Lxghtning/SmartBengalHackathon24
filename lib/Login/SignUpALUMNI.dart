@@ -10,7 +10,7 @@ import '/help_func.dart';
 import '/Firebase/Database_Services.dart';
 import 'package:sbh24/Components/Navigators.dart';
 import 'SignInALUMNI.dart';
-
+import 'package:sbh24/Forum/forum.dart';
 
 class SignUpALUMNI extends StatefulWidget {
   const SignUpALUMNI({super.key});
@@ -274,7 +274,7 @@ class _SignUpALUMNIState extends State<SignUpALUMNI> {
                                   //Forum
                                   await fdb.addUser(displayName,
                                       FirebaseAuth.instance.currentUser?.uid);
-                                  navigation().navigateToPage(context, const Home());
+                                  navigation().navigateToPage(context, const Forum());
 
                                 }
                               } catch (e) {

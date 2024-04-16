@@ -78,7 +78,7 @@ class _MessagesState extends State<Messages> {
       messageDate: currentDate,
       dateMessage: messageData(latestMessagesTimestamp, index),
       // profilePicture: fetchphotoURLFromUID(messengers[index]).toString(),
-      profilePicture: Helpers.randomPictureUrl()
+      profilePicture: fetchphotoURLFromUID(messengers[index]).toString()
     ));
   }
 

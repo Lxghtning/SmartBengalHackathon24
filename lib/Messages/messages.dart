@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:sbh24/Components/NavBar.dart';
 import 'package:sbh24/Messages/messageBackend.dart';
+import '../Components/NavBarAlumni.dart';
 import '../Components/avatar.dart';
 import '../Components/helpers.dart';
 import '../Components/message_data.dart';
@@ -24,11 +26,20 @@ class _MessagesState extends State<Messages> {
   List messengers = [];
   List latestMessages = [];
   List latestMessagesTimestamp = [];
+  User user = FirebaseAuth.instance.currentUser!;
+  bool isAlumni = false;
 
   @override
   void initState() {
     super.initState();
     call();
+    checkIfAlumni();
+  }
+  Future<void> checkIfAlumni() async {
+    var userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+    setState(() {
+      isAlumni = !userDoc.exists; // If the document doesn't exist, assume it's an alumni
+    });
   }
 
   void call() async {
@@ -75,7 +86,7 @@ class _MessagesState extends State<Messages> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: HexColor("#1b2a61"),
-        drawer: NavBar(),
+        drawer: isAlumni? NavBarAlumni(): NavBar(),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
         ),

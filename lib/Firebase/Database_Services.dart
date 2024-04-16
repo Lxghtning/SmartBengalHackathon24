@@ -10,7 +10,7 @@ import 'package:image_picker/image_picker.dart';
 
   final CollectionReference ALUMNI = FirebaseFirestore.instance.collection('ALUMNI');
   final CollectionReference users = FirebaseFirestore.instance.collection('users');
-
+  final CollectionReference Counsellors = FirebaseFirestore.instance.collection('Counsellors');
 
   //while updating the user profile, this function will be called to update the user to the database for changing the photoURL of the user and generate an avatar of the user.
   Future updateUserData_Profile(String uid, String email, String displayName, String yearOfGrad) async {
@@ -37,6 +37,20 @@ import 'package:image_picker/image_picker.dart';
        'rating': [],
      });
    }
+  Future updateCounsellorData_Profile(String countryName, String uid, String email, String displayName, String yearsOfExperience) async {
+    //TODO: Add isStudent field to the database
+    return await ALUMNI.doc(uid).set({
+      'email': email,
+      'displayName': displayName,
+      'yearsOfExperience': yearsOfExperience,
+      'photoURL': 'https://t4.ftcdn.net/jpg/00/65/77/27/360_F_65772719_A1UV5kLi5nCEWI0BNLLiFaBPEkUbv5Fv.jpg',
+      'reviewAuthors':[],
+      'reviewComments': [],
+      'countryName': countryName,
+      'uid': uid,
+      'rating': [],
+    });
+  }
 
   Future<List> sendALUMNINames() async{
     List alumniNames = [];
@@ -219,17 +233,34 @@ import 'package:image_picker/image_picker.dart';
   }
 
   Future <bool> isEmailExisting(String email) async {
-    bool isEmailExisting = false;
     await users.get().then((QuerySnapshot querySnapshot){
       for(var doc in querySnapshot.docs){
         print(doc['email']);
         if(doc['email'] == email){
-          isEmailExisting = true;
+          return true;
         }
       }
 
     });
-  return isEmailExisting;
+    await ALUMNI.get().then((QuerySnapshot querySnapshot){
+      for(var doc in querySnapshot.docs){
+        print(doc['email']);
+        if(doc['email'] == email){
+          return true;
+        }
+      }
+
+    });
+    await Counsellors.get().then((QuerySnapshot querySnapshot){
+      for(var doc in querySnapshot.docs){
+        print(doc['email']);
+        if(doc['email'] == email){
+          return true;
+        }
+      }
+
+    });
+  return false;
   }
 
   Future<Map> userData(String uid) async {

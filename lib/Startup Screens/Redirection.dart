@@ -6,6 +6,8 @@ import 'package:sbh24/Login/SignInALUMNI.dart';
 import 'package:sbh24/Login/SignUp.dart';
 import 'package:sbh24/Login/SignUpALUMNI.dart';
 
+import '../Login/SignUpCounsellor.dart';
+
 class Redirection extends StatelessWidget {
 
   final navigation nav = navigation();
@@ -43,7 +45,7 @@ class Redirection extends StatelessWidget {
                         ),
                         child: TextButton.icon(
                           onPressed: () {
-                            nav.navigateToPage(context, SignUp());
+                            nav.navigateToPage(context, const SignUp());
                           },
                           icon: Icon(Icons.person, color: Colors.white,),
                           label: Text('Sign Up as Student', style: TextStyle(color: Colors.white, fontSize: 20.0),),
@@ -63,7 +65,7 @@ class Redirection extends StatelessWidget {
                     ),
                     child: TextButton.icon(
                       onPressed: () {
-                        nav.navigateToPage(context, SignUpALUMNI());
+                        nav.navigateToPage(context, const SignUpALUMNI());
                       },
                       icon: Icon(Icons.person, color: Colors.white,),
                       label: Text('Sign Up as College Buddy', style: TextStyle(color: Colors.white, fontSize: 20.0),),
@@ -72,6 +74,25 @@ class Redirection extends StatelessWidget {
                   ),
 
                   SizedBox(height: 20.0),
+
+                      Container(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(color: Colors.white),
+                        ),
+                        child: TextButton.icon(
+                          onPressed: () {
+                            nav.navigateToPage(context, const SignUpCounsellor());
+                          },
+                          icon: Icon(Icons.person, color: Colors.white,),
+                          label: Text('Sign Up as Career Counsellor', style: TextStyle(color: Colors.white, fontSize: 20.0),),
+
+                        ),
+                      ),
+                      SizedBox(height: 20.0),
+
                   ]
                   ),
             ],),

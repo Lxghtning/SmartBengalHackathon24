@@ -33,6 +33,18 @@ class Authentication_Services {
       print(e.toString());
     }
   }
+  Future RegisterCounsellor(String countryName, String email, String password,String displayName, String years) async {
+    //TODO: Add isStudent field to the database
+    try {
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      await _auth.currentUser!.updateDisplayName(displayName);
+      await _auth.currentUser!.updatePhotoURL('https://www.google.com/url?sa=i&url=https%3A%2F%2Fin.pinterest.com%2Fpin%2Faccount-add-admin-avatar-host-person-user-icon-download-on-iconfinder--876090933731408162%2F&psig=AOvVaw0X5O8GKOFqkAqB6FTeXt9l&ust=1712745872558000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCIirm-X5tIUDFQAAAAAdAAAAABAK');
+      String uid = _auth.currentUser!.uid;
+      await Database_Services().updateALUMNIData_Profile(countryName, uid, email, displayName, years);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 
   Future<void> signIn(String email, String password) async {
     try {

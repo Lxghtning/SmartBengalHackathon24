@@ -1,20 +1,18 @@
 import 'package:sbh24/Forum/forum.dart';
-import 'package:sbh24/Profile/Profile.dart';
-import 'package:sbh24/Profile/ProfileAlumni.dart';
-import 'package:sbh24/Startup%20Screens/1.dart';
-import 'package:sbh24/Startup%20Screens/Grid.dart';
 import 'package:sbh24/main.dart';
 import 'package:sbh24/Components/Navigators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import '../Home/homeCounsellor.dart';
 import '../Messages/messageBackend.dart';
 import '../Messages/messages.dart';
-import 'package:sbh24/Home/homeAlumni.dart';
+
+import '../Profile/ProfileCounsellor.dart';
 
 
-class NavBarAlumni extends StatelessWidget {
-  NavBarAlumni({super.key});
+class NavBarCounsellor extends StatelessWidget {
+  NavBarCounsellor({super.key});
   //Navigation object
   final navigation nav = navigation();
   final messageDB msgdb = messageDB();
@@ -57,7 +55,7 @@ class NavBarAlumni extends StatelessWidget {
               leading: const Icon(Icons.home),
               title: Text('Home', style: listtiletextstyle,),
               onTap: () => {
-                nav.navigateToPage(context, HomeAlumni())
+                nav.navigateToPage(context, const HomeCounsellor())
               }
           ),
           const Divider(
@@ -83,7 +81,7 @@ class NavBarAlumni extends StatelessWidget {
               leading: const Icon(Icons.person),
               title: Text('Profile', style: listtiletextstyle,),
               onTap: () {
-                nav.navigateToPage(context, ProfilePageAlumni());
+                nav.navigateToPage(context, ProfilePageCounsellor());
               }),
           const Divider(
             indent: 0,

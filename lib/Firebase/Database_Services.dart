@@ -250,15 +250,26 @@ import 'package:image_picker/image_picker.dart';
           .where('email', isEqualTo: email)
           .limit(1)
           .get();
+      var result1 = await FirebaseFirestore.instance
+          .collection('ALUMNI') // Assuming 'users' is your collection
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+      var result2 = await FirebaseFirestore.instance
+          .collection('Counsellors') // Assuming 'users' is your collection
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
 
-      if (result.docs.isEmpty) {
+      if (result.docs.isEmpty && result1.docs.isEmpty && result2.docs.isEmpty){
         // No document found with the specified email
         return false;
       }
 
       // Check if the document actually has the 'email' field
-      if (result.docs.first.exists &&
-          result.docs.first.data().containsKey('email')) {
+      if ((result.docs.first.exists &&
+          result.docs.first.data().containsKey('email')) || ( (result1.docs.first.exists && result1.docs.first.data().containsKey('email')) ) || ( result2.docs.first.exists &&
+          result2.docs.first.data().containsKey('email') ) ) {
         return true;
       } else {
         return false;

@@ -248,6 +248,88 @@ class _ProfilePageState extends State<ProfilePage> {
               leading: Icon(Icons.attach_money_rounded, color: Colors.white,),
               title: Text('Payment History', style: TextStyle(color: Colors.white),),
             ),
+            // Dummy payment history tiles
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey.withOpacity(0.2),
+              ),
+              margin: EdgeInsets.symmetric(vertical: 8),
+              child: ListTile(
+                leading: Icon(Icons.attach_money_rounded, color: Colors.white,),
+                title: Text(
+                  'Payment 1',
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Amount: \$100',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      'Date: 2024-04-28',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey.withOpacity(0.2),
+              ),
+              margin: EdgeInsets.symmetric(vertical: 8),
+              child: ListTile(
+                leading: Icon(Icons.attach_money_rounded, color: Colors.white,),
+                title: Text(
+                  'Payment 2',
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Amount: \$150',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      'Date: 2024-04-27',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey.withOpacity(0.2),
+              ),
+              margin: EdgeInsets.symmetric(vertical: 8),
+              child: ListTile(
+                leading: Icon(Icons.attach_money_rounded, color: Colors.white,),
+                title: Text(
+                  'Payment 3',
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Amount: \$200',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      'Date: 2024-04-26',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
 
 
 
